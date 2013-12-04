@@ -107,7 +107,7 @@ annotator_document = Uglify(
 )
 annotator_dtm = Uglify(
     'lib/mutation-summary.js',
-    Coffee('lib/text_mapper_core.coffee', output='js/text_mapper_core.js'),    
+    Coffee('lib/text_mapper_core.coffee', output='js/text_mapper_core.js'),
     Coffee('lib/dom_text_mapper.coffee', output='js/dom_text_mapper.js'),
     'lib/annotator.domtextmapper.js',
     output='lib/annotator.dtm.min.js'

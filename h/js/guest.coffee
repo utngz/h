@@ -365,7 +365,6 @@ class Annotator.Guest extends Annotator
     # Show a temporary highlight so the user can see what they selected
     # Also extract the quotation and serialize the ranges
     this.setupAnnotation(this.createAnnotation()).then (annotation) =>
-
       hl.setTemporary(true) for hl in @getHighlights([annotation])
 
       # Subscribe to the editor events
