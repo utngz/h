@@ -507,6 +507,7 @@ class Hypothesis extends Annotator
         return
 
       this.socialView.name = 'single-player'
+      this.setVisibleHighlights true
     else
       this.socialView.name = 'none'
 
