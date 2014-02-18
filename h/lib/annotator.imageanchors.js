@@ -7,7 +7,7 @@
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2014-02-18 15:22:38Z
+** Built at: 2014-02-18 16:28:05Z
 */
 
 
@@ -178,7 +178,24 @@
     }
 
     ImageAnchor.prototype._createHighlight = function(page) {
-      return new ImageHighlight(this, page, this.image, this.index, this.shape, this.geometry, this.annotorious);
+      var dfd, e2, error, hl;
+      dfd = this.$.Deferred();
+      try {
+        hl = new ImageHighlight(this, page, this.image, this.index, this.shape, this.geometry, this.annotorious);
+        dfd.resolve(hl);
+      } catch (_error) {
+        error = _error;
+        try {
+          dfd.reject({
+            message: "Cought exception",
+            error: error
+          });
+        } catch (_error) {
+          e2 = _error;
+          console.log("Unknown error", e2.stack);
+        }
+      }
+      return dfd.promise();
     };
 
     return ImageAnchor;
