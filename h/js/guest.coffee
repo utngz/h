@@ -28,10 +28,10 @@ class Annotator.Guest extends Annotator
               #console.log "Ignoring style change on", node.tagName
               false
             else
-              console.log attributeName, "of", node, ":",
-                "'" + oldValue + "'",
-                "->",
-                "'" + newValue + "'"
+#              console.log attributeName, "of", node, ":",
+#                "'" + oldValue + "'",
+#                "->",
+#                "'" + newValue + "'"
               true
           else
             newClasses = if newValue then newValue.split " " else []
@@ -51,7 +51,7 @@ class Annotator.Guest extends Annotator
                 "annotorious-item-unfocus" in changedClasses
               false
             else
-              console.log "Class change: ", changedClasses
+#              console.log "Class change: ", changedClasses
               true
     TextAnchors: {}
     FuzzyTextAnchors: {}
