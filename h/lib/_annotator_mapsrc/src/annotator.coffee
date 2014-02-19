@@ -253,6 +253,7 @@ class Annotator extends Delegator
     # dynamic elements in the page (notifications, dialogs, etc.) may well
     # have high z-indices that we can't catch using the above method.
     max = Math.max(max, 1000)
+    @maxZIndex = max
 
     style.text [
       ".annotator-adder, .annotator-outer, .annotator-notice {"
@@ -740,7 +741,7 @@ class Annotator extends Delegator
   #            newly created annotation
   #   pageX and pageY: if the adder button is shown, use there coordinates
   #
-  # immadiate - should we show the adder button, or should be proceed
+  # immediate - should we show the adder button, or should be proceed
   #             to create the annotation/highlight immediately ?
   #
   # returns false if the creation of annotations is forbidden at the moment,
