@@ -766,6 +766,7 @@ class Annotator extends Delegator
     # Do we want immediate annotation?
     if immediate
       # Create an annotation
+      @disableAnnotating()
       @onAdderClick event
     else
       # Show the adder button
