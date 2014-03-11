@@ -7298,7 +7298,8 @@ annotorious.okfn.ImagePlugin = function(a, b, c, d) {
     e._imageAnnotator.addAnnotation(c);
     e._imageAnnotator.stopSelection();
     goog.dom.classes.remove(e._imageAnnotator.element, "annotorious-selection-in-progress");
-    e._imagePlugin.annotate(e._imageAnnotator._image, e._index, a.shape.type, a.shape.geometry, b, c)
+    e._imagePlugin.annotate(e._imageAnnotator._image, e._index, a.shape.type, a.shape.geometry, b, c);
+    a.mouseEvent.stopPropagation()
   };
   this._imageAnnotator._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, this._newSelectionHandler);
   this._newCancelHandler = function() {
