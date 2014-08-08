@@ -831,8 +831,8 @@ class Search
       refresh()
 
     refresh = =>
-      query = $routeParams.q
-      [$scope.matches, $scope.filters] = viewFilter.filter $rootScope.annotations, query
+      $scope.query = $routeParams.q
+      [$scope.matches, $scope.filters] = viewFilter.filter $rootScope.annotations, $scope.query
       # Create the regexps for highlighting the matches inside the annotations' bodies
       $scope.text_tokens = $scope.filters.text.terms.slice()
       $scope.text_regexp = []
