@@ -3,6 +3,7 @@ imports = [
   'ngRoute'
   'h.auth'
   'h.controllers'
+  'h.controllers.Viewer'
   'h.controllers.AccountManagement'
   'h.directives'
   'h.filters'
