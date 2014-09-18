@@ -2,8 +2,16 @@ $thread-padding: 1em;
 $threadexp-width: .6em;
 
 .stream-list {
+  position: relative;
+
   & > * {
     margin-bottom: .72em;
+  }
+
+  > .thread {
+    position: absolute;
+    left: 0;
+    right: 0;
   }
 
   .card-emphasis {
