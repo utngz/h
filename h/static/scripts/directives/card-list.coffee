@@ -173,8 +173,8 @@ class CardListController
     list = createCardList()
     count = 0
 
-    vm.registerItem = (id, elem, index) ->
-      card = new Card(elem, 0)
+    vm.registerItem = (id, anchorTop, elem, index) ->
+      card = new Card(elem, anchorTop)
       list.splice(index, 0, card)
 
     vm.draw = (index) ->
@@ -186,7 +186,6 @@ class CardListController
 cardList = [->
   controller: 'CardListController'
   controllerAs: 'vm'
-  link: linkFn
   require: []
   scope: true
 ]
@@ -197,7 +196,9 @@ cardList = [->
 cardListItem = ['$parse', ($parse) ->
   linkFn = (scope, elem, attrs, [cardList]) ->
     annotation = $parse(attrs.cardListItem)(scope)
-    cardList.registerItem(annotation.id, elem, scope.$index)
+    if annotation?
+      top = annotation.target?[0]?.pos.top || 0
+      cardList.registerItem(annotation.id, top, elem, scope.$index)
 
     scope.$watch '$index', (val) ->
       # Use this to update the index of cards should they be re-ordered
