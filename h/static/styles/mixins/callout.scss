@@ -1,0 +1,55 @@
+// Builds callout arrows based on the code from http://cssarrowplease.com
+// the parent element needs at least relative positioning for the arrow to
+// be placed correctly.
+//
+// $background-color: A color to use as the arrow background.
+// $border-color: A color to use for the border color.
+// $pos: Where should the callout be positioned? One of top, left, right, bottom.
+// $size: The size of the callout.
+// $border-width: The width of the callout border.
+@mixin callout($background-color, $border-color, $pos: top, $size: 5px, $border-width: 1px) {
+  $offset: bottom;
+  $center: left;
+
+  @if $pos == bottom {
+    $offset: top;
+    $center: left;
+  }
+
+  @if $pos == left {
+    $offset: right;
+    $center: top;
+  }
+
+  @if $pos == right {
+    $offset: left;
+    $center: top;
+  }
+
+  &:after, &:before {
+    #{$offset}: 100%;
+    #{$center}: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &:after {
+    border-color: rgba($background-color, 0);
+    border-#{$offset}-color: $background-color;
+    border-width: $size;
+    margin-#{$center}: -$size;
+  }
+
+  &:before {
+    // http://git.io/r_xoNw
+    $actual-border-width: $size + round($border-width * 1.41421356);
+    border-color: rgba($border-color, 0);
+    border-#{$offset}-color: $border-color;
+    border-width: $actual-border-width;
+    margin-#{$center}: -$actual-border-width;
+  }
+}
