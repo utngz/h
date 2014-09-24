@@ -1,0 +1,45 @@
+.filter-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #FBFBFB;
+  padding: 10px;
+  font-size: 12px;
+  z-index: 1;
+  border-bottom: 1px solid #D3D3D3;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-bar-select {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+
+  .icon-expand {
+    font-size: 1.1667em;
+    position: relative;
+    top: .1428em;
+    margin-left: -.2857em;
+  }
+}
+
+.filter-bar-value {
+  color: $text-color;
+  text-decoration: underline;
+}
+
+.filter-bar-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.filter-bar-reset {
+  float: right;
+  color: #585858;
+  text-decoration: underline;
+}
