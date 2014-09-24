@@ -1,5 +1,6 @@
 @import 'base';
 @import 'responsive';
+@import 'mixins/callout';
 
 
 body {
@@ -60,5 +61,44 @@ body {
       line-height: 28px;
       margin: 0 .72em;
     }
+  }
+
+  // TODO: Refactor this further.
+  .filter-bar-wrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 300px;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .filter-bar {
+    line-height: 1;
+    top: 1px;
+    pointer-events: all;
+  }
+
+  .filter-bar-toggle-wrapper {
+    position: relative;
+
+    @include callout(#FBFBFB, #D3D3D3, $size: 5px) {
+      bottom: auto;
+      top: 18px;
+    }
+
+    &:after {
+      margin-top: 3px;
+    }
+
+    float: right;
+    margin: 0;
+  }
+
+  .filter-bar-toggle {
+    font-size: 16px;
+    color: $text-color;
+    line-height: inherit;
   }
 }

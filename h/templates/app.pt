@@ -7,6 +7,22 @@
         <a class="pull-right" href=""
            ng-click="id.request()"
            ng-switch-when="null">Sign in</a>
+
+        <!-- Filters -->
+        <span class="filter-bar-toggle-wrapper">
+          <a href="" class="filter-bar-toggle icon-filters"></a>
+        </span>
+        <div class="filter-bar-wrapper">
+          <div class="filter-bar">
+            Ordered by
+            <span class="filter-bar-select">
+              <a class="filter-bar-value" href="#">{{filterValue}}</a> <i class="icon-expand"></i>
+              <select class="filter-bar-input" ng-init="filterValue = 'location'" ng-model="filterValue" ng-options="option for option in ['newest', 'oldest', 'location']"></select>
+            </span>
+            <a class="filter-bar-reset" href="#" ng-click="$event.preventDefault(); filterValue = 'location'" ng-show="filterValue != 'location'">Clear filters</a>
+          </div>
+        </div>
+
         <div class="dropdown pull-right user-picker" ng-switch-default>
           <span role="button"
                 class="dropdown-toggle"
@@ -30,6 +46,7 @@
              on-search="search.update(query)"
              on-clear="search.clear()"></div>
         <!-- / Searchbar -->
+
       </div>
     </div>
     <!-- / Toolbar -->
