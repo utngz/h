@@ -48,6 +48,7 @@
       }
 
       .pattern-library-toggle {
+        z-index: 1;
         position: fixed;
         top: 0;
         right: 10%;
@@ -498,6 +499,7 @@
             </div>
           </tags-input>
         </div>
+      </div>
       <div class="pattern-library-example">
         <div class="pattern-library-example-header">
           <h1>Tags (Read Only)</h1>
@@ -764,6 +766,27 @@
 
             </li>
           </ul>
+        </div>
+      </div>
+      <div class="pattern-library-example">
+        <div class="pattern-library-example-header">
+          <h1>Filter Bar</h1>
+        </div>
+        <div class="pattern-library-example-content">
+          <div style="position: relative; overflow: hidden; height: 80px; border: 1px solid #d3d3d3">
+            <div class="filter-bar">
+              Ordered by
+              <span class="filter-bar-select">
+                <a class="filter-bar-value" href="#">location</a> <i class="icon-expand"></i>
+                <select class="filter-bar-input">
+                  <option>location</option>
+                  <option>newest</option>
+                  <option>oldest</option>
+                </select>
+              </span>
+              <a class="filter-bar-reset" href="#">Clear filters</a>
+            </div>
+          </div>
         </div>
       </div>
       <div class="pattern-library-example">
