@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'h';
-	src:url('fonts/h.eot?-b10uo5');
-	src:url('fonts/h.eot?#iefix-b10uo5') format('embedded-opentype'),
-		url('fonts/h.woff?-b10uo5') format('woff'),
-		url('fonts/h.ttf?-b10uo5') format('truetype'),
-		url('fonts/h.svg?-b10uo5#h') format('svg');
+	src:url('fonts/h.eot?-88ssly');
+	src:url('fonts/h.eot?#iefix-88ssly') format('embedded-opentype'),
+		url('fonts/h.woff?-88ssly') format('woff'),
+		url('fonts/h.ttf?-88ssly') format('truetype'),
+		url('fonts/h.svg?-88ssly#h') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,6 +23,12 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-filters:before {
+	content: "\e600";
+}
+.icon-expand:before {
+	content: "\e602";
+}
 .icon-math:before {
 	content: "\e615";
 }
@@ -55,6 +61,9 @@
 }
 .icon-flag:before {
 	content: "\28";
+}
+.icon-delete:before {
+	content: "\29";
 }
 .icon-export:before {
 	content: "\2a";
