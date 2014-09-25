@@ -168,7 +168,8 @@ createCardList = ->
 # be added/removed from the list. It manages an instance of a CardList
 # and ensures that rendering is up to date.
 class CardListController
-  constructor: ->
+  this.$inject = ['annotator']
+  constructor: (annotator) ->
     vm = this
     list = createCardList()
     count = 0
@@ -179,7 +180,7 @@ class CardListController
 
     vm.draw = (index) ->
       list.anchor(list[index])
-      list.draw(window.scrollY)
+      list.draw(annotator.scrollY)
 
 # A simple controller directive that sits on the top of the stream-list and
 # provides a controller for child cardListItems to interact with.

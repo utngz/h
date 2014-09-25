@@ -184,6 +184,10 @@ class Hypothesis extends Annotator
       @element.scope().$apply => this.setVisibleHighlights state
     )
 
+    .bind('setScrollY', (ctx, scrollY) =>
+      @element.scope().$apply => this.setScrollY(scrollY)
+    )
+
    # Look up an annotation based on its bridge tag
   _getLocalAnnotation: (tag) -> @plugins.Bridge.cache[tag]
 
@@ -354,6 +358,8 @@ class Hypothesis extends Annotator
         method: 'setVisibleHighlights'
         params: state
 
+  setScrollY: (scrollY) ->
+    @scrollY = scrollY
 
 class DraftProvider
   _drafts: null

@@ -38,6 +38,16 @@ class Annotator.Host extends Annotator.Guest
     # Scan the document
     this.scanDocument "Host initialized"
 
+    # Notify the sidebar about scrolling to update ScrollY
+    timer = null
+    document.addEventListener 'scroll', =>
+      clearTimeout timer if timer?
+      timer = setTimeout =>
+        @panel?.notify
+          method: 'setScrollY'
+          params: window.scrollY
+      , 200
+
   _setupXDM: (options) ->
     channel = super
 
