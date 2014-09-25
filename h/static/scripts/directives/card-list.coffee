@@ -168,8 +168,7 @@ createCardList = ->
 # be added/removed from the list. It manages an instance of a CardList
 # and ensures that rendering is up to date.
 class CardListController
-  this.$inject = ['annotator']
-  constructor: (annotator) ->
+  constructor: ->
     vm = this
     list = createCardList()
     count = 0
@@ -178,9 +177,9 @@ class CardListController
       card = new Card(elem, anchorTop)
       list.splice(index, 0, card)
 
-    vm.draw = (index) ->
+    vm.draw = (index, offset) ->
       list.anchor(list[index])
-      list.draw(annotator.scrollY)
+      list.draw(offset)
 
 # A simple controller directive that sits on the top of the stream-list and
 # provides a controller for child cardListItems to interact with.
@@ -194,7 +193,7 @@ cardList = [->
 # An individual card list item. This registers itself with the parent
 # cardList and notifies the list controller of changes to it's annotation
 # position/dimensions etc.
-cardListItem = ['$parse', ($parse) ->
+cardListItem = ['$parse', 'annotator', ($parse, annotator) ->
   linkFn = (scope, elem, attrs, [cardList]) ->
     annotation = $parse(attrs.cardListItem)(scope)
     if annotation?
@@ -206,7 +205,13 @@ cardListItem = ['$parse', ($parse) ->
 
     scope.$watch (-> elem.outerHeight()), ->
       # A card has been expanded/collapsed so redraw.
-      cardList.draw(scope.$index)
+      offset = annotator.scrollY + elem.parent().offset().top
+      cardList.draw(scope.$index, offset)
+
+    scope.$watch (-> annotator.scrollY), ->
+      # Scrolling happened so draw
+      offset = annotator.scrollY + elem.parent().offset().top
+      cardList.draw(scope.$index, offset)
 
   link: linkFn
   require: ['^cardList']

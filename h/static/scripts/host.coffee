@@ -38,6 +38,11 @@ class Annotator.Host extends Annotator.Guest
     # Scan the document
     this.scanDocument "Host initialized"
 
+    # Publish the scrolling data initially
+    @panel?.notify
+      method: 'setScrollY'
+      params: window.scrollY
+
     # Notify the sidebar about scrolling to update ScrollY
     timer = null
     document.addEventListener 'scroll', =>
@@ -46,7 +51,7 @@ class Annotator.Host extends Annotator.Guest
         @panel?.notify
           method: 'setScrollY'
           params: window.scrollY
-      , 200
+      , 25
 
   _setupXDM: (options) ->
     channel = super

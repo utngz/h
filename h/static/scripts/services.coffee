@@ -63,6 +63,7 @@ class Hypothesis extends Annotator
     @providers = []
     @socialView =
       name: "none" # "single-player"
+    @scrollY = 0
 
     this.patch_store()
 
