@@ -24,6 +24,7 @@ class Card
     @_top = anchorTop
     @_anchorTop = anchorTop
     @_cache = bounds(this)
+    @_active = false
 
   top: ->
     @_top
@@ -47,8 +48,19 @@ class Card
   # the element in a fixed container based on the scroll position for example.
   draw: (offset=0) ->
     # TODO: Use transform: translateX() here for a performance boost.
+    #@_el.css('-webkit-transform', 'translateY(' + this.top() - offset + ')')
     @_el.css('top', this.top() - offset)
     @_cache = bounds(this)
+
+  setActive: (state=true) ->
+    return if state is @_active
+    @_active = state
+
+    if @_active
+      @_el.addClass('annotation-card-active')
+    else
+      @_el.removeClass('annotation-card-active')
+
 
 # A CardList is an augmented array of Card items and handles their positioning
 # in the view. It is this object through the .moveTo method that handles
@@ -83,6 +95,12 @@ createCardList = ->
   # Takes a card and moves it to it's anchor point.
   list.anchor = (card) ->
     list.moveTo(card, card.anchorTop()) if card
+
+  # Activates a card in the list and deactivates the rest
+  list.setActiveCard = (index) ->
+    for card, cardIndex in list
+      card.setActive cardIndex is index
+
 
   # Moves a card into position and updates it's surrounding cards.
   #
@@ -181,6 +199,9 @@ class CardListController
       list.anchor(list[index])
       list.draw(offset)
 
+    vm.setActiveCard = (index) ->
+      list.setActiveCard index
+
 # A simple controller directive that sits on the top of the stream-list and
 # provides a controller for child cardListItems to interact with.
 cardList = [->
@@ -206,12 +227,15 @@ cardListItem = ['$parse', 'annotator', ($parse, annotator) ->
     scope.$watch (-> elem.outerHeight()), ->
       # A card has been expanded/collapsed so redraw.
       offset = annotator.scrollY + elem.parent().offset().top
-      cardList.draw(scope.$index, offset)
+      cardList.draw scope.$index, offset
 
     scope.$watch (-> annotator.scrollY), ->
       # Scrolling happened so draw
       offset = annotator.scrollY + elem.parent().offset().top
-      cardList.draw(scope.$index, offset)
+      cardList.draw scope.$index, offset
+
+    elem.on 'click', (event) ->
+      cardList.setActiveCard scope.$index
 
   link: linkFn
   require: ['^cardList']
