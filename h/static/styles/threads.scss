@@ -27,6 +27,12 @@ $threadexp-width: .6em;
   cursor: pointer;
   position: relative;
 
+  -webkit-transition: margin-left 0.3s ease-out, -webkit-transform 0.3s ease-out;
+     -moz-transition: margin-left 0.3s ease-out, -moz-transform 0.3s ease-out;
+      -ms-transition: margin-left 0.3s ease-out, -ms-transform 0.3s ease-out;
+       -o-transition: margin-left 0.3s ease-out, -o-transform 0.3s ease-out;
+          transition: margin-left 0.3s ease-out, transform 0.3s ease-out;
+
   & > ul {
     padding-left: $thread-padding + .15em;
     margin-left: -$thread-padding;

@@ -25,6 +25,7 @@ class Card
     @_anchorTop = anchorTop
     @_cache = bounds(this)
     @_active = false
+    @_last = null
 
   top: ->
     @_top
@@ -38,20 +39,60 @@ class Card
   anchorTop: ->
     @_anchorTop
 
+  setAnchorTop: (anchorTop) ->
+    @_anchorTop = anchorTop
+
   # A bounds object for the Card the last time it was updated.
   drawnBounds: ->
     @_cache
+
+  animate: (from, to, duration, fn, doneFn) ->
+    #console.log 'animate', from, to, duration, fn
+    diff = to - from
+    start = new Date().getTime()
+
+    easeOutSine = (t, b, c, d) ->
+      c * Math.sin(t/d * (Math.PI/2)) + b
+
+    linear = (t, b, c, d) ->
+      ((t / d) * c) + b
+
+    tick = =>
+      setTimeout =>
+        time = (new Date().getTime() - start)
+        value = linear(time, from, to - from, duration)
+        fn value
+        if time < duration
+          tick()
+        else
+          doneFn()
+      , 60 / 1000
+
+    tick()
+    return
+
+  _moveCard: (pos=0) =>
+    #console.log 'movecard', offset
+    # TODO: Use transform: translateX() here for a performance boost.
+    #@_el.css('-webkit-transform', 'translateY(' + this.top() - offset + 'px)')
+#    console.log 'drawing to', this.top() - offset
+    @_el.css('top', pos)
 
   # Updates the position of the element in the document. An offset can be
   # provided to tweak where the element is positioned while
   # retaining it's internal relative position. This is useful for offsetting
   # the element in a fixed container based on the scroll position for example.
   draw: (offset=0) ->
-    # TODO: Use transform: translateX() here for a performance boost.
-    #@_el.css('-webkit-transform', 'translateY(' + this.top() - offset + ')')
-#    console.log 'drawing to', this.top() - offset
-    @_el.css('top', this.top() - offset)
-    @_cache = bounds(this)
+    newPos = this.top() - offset
+    if @_last?
+      doneFn = =>
+        @_last = newPos
+        @_cache = bounds(this)
+      @animate @_last, newPos, 300, @_moveCard, doneFn
+    else
+      @_moveCard newPos
+      @_last = newPos
+      @_cache = bounds(this)
 
   setActive: (state=true) ->
     return if state is @_active
