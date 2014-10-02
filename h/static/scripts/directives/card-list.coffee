@@ -47,7 +47,6 @@ class Card
     @_cache
 
   animate: (from, to, duration, fn, doneFn) ->
-    #console.log 'animate', from, to, duration, fn
     diff = to - from
     start = new Date().getTime()
 
@@ -72,10 +71,8 @@ class Card
     return
 
   _moveCard: (pos=0) =>
-    #console.log 'movecard', offset
     # TODO: Use transform: translateX() here for a performance boost.
     #@_el.css('-webkit-transform', 'translateY(' + this.top() - offset + 'px)')
-#    console.log 'drawing to', this.top() - offset
     @_el.css('top', pos)
 
   # Updates the position of the element in the document. An offset can be
@@ -172,10 +169,10 @@ createCardList = ->
   #   infinitely updating each other.
   list.moveTo = (card, position, options=MOVE_DEFAULTS) ->
     # return if card.top() == position
-
     prev = prevCard(card)
     next = nextCard(card)
     oldBounds = card.drawnBounds()
+
     cascadeForwards  = options.direction in [CASCADE_BOTH, CASCADE_FORWARDS]
     cascadeBackwards = options.direction in [CASCADE_BOTH, CASCADE_BACKWARDS]
 
@@ -191,6 +188,14 @@ createCardList = ->
     movementBounds =
       y1: Math.min(oldBounds.y1, newBounds.y1)
       y2: Math.max(oldBounds.y2, newBounds.y2)
+
+    if prev?
+      # You try to place this card inside a new card
+      if cascadeBackwards && isIntersecting(bounds(prev), newBounds)
+        list.moveTo(prev, card.top() - prev.height() - OFFSET, {
+          direction: CASCADE_BACKWARDS
+        })
+
 
     if newBounds.y1 > oldBounds.y1
       # Top of card has moved downwards pull previous card down.
@@ -246,12 +251,10 @@ class CardListController
       list.anchor(list[index])
       list.setActiveCard index
 
-    $scope.$watch (-> annotator.scrollY), ->
-      #console.log 'scrollY', annotator.scrollY
+    $scope.$watch (-> annotator.scrollY), (n,o) ->
+      return unless n isnt o
       # Scrolling happened so draw
       offset = annotator.scrollY + $element.offset().top
-#      console.log 'offset', annotator.scrollY, offset
-      #cardList.draw scope.$index, offset
       list.draw(offset)
 
 
@@ -277,16 +280,15 @@ cardListItem = ['$parse', 'annotator', ($parse, annotator) ->
     scope.$watch '$index', (val) ->
       # Use this to update the index of cards should they be re-ordered
 
-#    scope.$watch (-> elem.outerHeight()), ->
-#      console.log 'elem.outherHeight fired'
-#      # A card has been expanded/collapsed so redraw.
-#      offset = annotator.scrollY + elem.parent().offset().top
-#      cardList.draw scope.$index, offset
+    scope.$watch (-> elem.outerHeight()), (n, o)->
+      if n? and Math.abs(n-o) > 9
+        # A card has been expanded/collapsed so redraw.
+        offset = annotator.scrollY + elem.parent().offset().top
+        cardList.draw scope.$index, offset
 
     elem.on 'click', (event) ->
       cardList.setActiveCard scope.$index
       offset = annotator.scrollY + elem.parent().offset().top
-#      console.log 'click offset', scope.$index,offset
       cardList.draw scope.$index, offset
 
   link: linkFn

@@ -38,10 +38,12 @@ class Annotator.Host extends Annotator.Guest
     # Scan the document
     this.scanDocument "Host initialized"
 
-    # Publish the scrolling data initially
-    @panel?.notify
-      method: 'setScrollY'
-      params: window.scrollY
+    # XXX: Disgusting temporary hack. Publish the scrolling data initially
+    setTimeout =>
+      @panel?.notify
+        method: 'setScrollY'
+        params: window.scrollY
+    , 1000
 
     # Notify the sidebar about scrolling to update ScrollY
     timer = null
