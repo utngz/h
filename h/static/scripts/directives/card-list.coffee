@@ -65,7 +65,7 @@ class Card
           tick()
         else
           doneFn()
-      , 60 / 1000
+      , 100 / 1000
 
     tick()
     return
@@ -256,13 +256,15 @@ class CardListController
 
 # A simple controller directive that sits on the top of the stream-list and
 # provides a controller for child cardListItems to interact with.
-cardList = ['annotator', (annotator) ->
+cardList = ['$$rAF', 'annotator', ($$rAF, annotator) ->
   linkFn = (scope, elem, attrs, [ctrl]) ->
     scope.$watch (-> annotator.scrollY), (n,o) ->
       return unless n isnt o
       # Scrolling happened so draw
-      offset = annotator.scrollY + elem.offset().top
-      ctrl.draw(-1, offset)
+      draw = =>
+        offset = annotator.scrollY + elem.offset().top
+        ctrl.draw(-1, offset)
+      $$rAF draw
   controller: 'CardListController'
   controllerAs: 'vm'
   link: linkFn
@@ -273,7 +275,7 @@ cardList = ['annotator', (annotator) ->
 # An individual card list item. This registers itself with the parent
 # cardList and notifies the list controller of changes to it's annotation
 # position/dimensions etc.
-cardListItem = ['$parse', 'annotator', ($parse, annotator) ->
+cardListItem = ['$parse', '$$rAF', 'annotator', ($parse, $$rAF, annotator) ->
   linkFn = (scope, elem, attrs, [cardList]) ->
     annotation = $parse(attrs.cardListItem)(scope)
     if annotation?
@@ -286,13 +288,17 @@ cardListItem = ['$parse', 'annotator', ($parse, annotator) ->
     scope.$watch (-> elem.outerHeight()), (n, o)->
       if n? and Math.abs(n-o) > 9
         # A card has been expanded/collapsed so redraw.
-        offset = annotator.scrollY + elem.parent().offset().top
-        cardList.draw scope.$index, offset
+        draw = =>
+          offset = annotator.scrollY + elem.parent().offset().top
+          cardList.draw scope.$index, offset
+        $$rAF draw
 
     elem.on 'click', (event) ->
-      cardList.setActiveCard scope.$index
-      offset = annotator.scrollY + elem.parent().offset().top
-      cardList.draw scope.$index, offset
+      draw = =>
+        cardList.setActiveCard scope.$index
+        offset = annotator.scrollY + elem.parent().offset().top
+        cardList.draw scope.$index, offset
+      $$rAF draw
 
   link: linkFn
   require: ['^cardList']
