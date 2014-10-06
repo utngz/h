@@ -233,8 +233,7 @@ createCardList = ->
 # be added/removed from the list. It manages an instance of a CardList
 # and ensures that rendering is up to date.
 class CardListController
-  this.$inject = ['$element', '$scope', 'annotator']
-  constructor: ($element, $scope, annotator) ->
+  constructor: ->
     vm = this
     list = createCardList()
     count = 0
@@ -251,19 +250,20 @@ class CardListController
       list.anchor(list[index])
       list.setActiveCard index
 
-    $scope.$watch (-> annotator.scrollY), (n,o) ->
-      return unless n isnt o
-      # Scrolling happened so draw
-      offset = annotator.scrollY + $element.offset().top
-      list.draw(offset)
-
 
 # A simple controller directive that sits on the top of the stream-list and
 # provides a controller for child cardListItems to interact with.
-cardList = [->
+cardList = ['annotator', (annotator) ->
+  linkFn = (scope, elem, attrs, [ctrl]) ->
+    scope.$watch (-> annotator.scrollY), (n,o) ->
+      return unless n isnt o
+      # Scrolling happened so draw
+      offset = annotator.scrollY + elem.offset().top
+      ctrl.draw(-1, offset)
   controller: 'CardListController'
   controllerAs: 'vm'
-  require: []
+  link: linkFn
+  require: ['cardList']
   scope: true
 ]
 
