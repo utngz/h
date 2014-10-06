@@ -242,6 +242,9 @@ class CardListController
       card = new Card(elem, anchorTop)
       list.splice(index, 0, card)
 
+    vm.unregisterItem = (index) ->
+      list.splice(index,1)
+
     vm.draw = (index, offset) ->
       list.anchor(list[index])
       list.draw(offset)
@@ -277,8 +280,8 @@ cardListItem = ['$parse', 'annotator', ($parse, annotator) ->
       top = annotation.target?[0]?.pos.top || 0
       cardList.registerItem(annotation.id, top, elem, scope.$index)
 
-    scope.$watch '$index', (val) ->
-      # Use this to update the index of cards should they be re-ordered
+    scope.$on '$destroy', ->
+      cardList.unregisterItem(scope.$index)
 
     scope.$watch (-> elem.outerHeight()), (n, o)->
       if n? and Math.abs(n-o) > 9
