@@ -178,15 +178,9 @@
         }
 
         return isSidebarInjected(tab.id).then(function (isInjected) {
-          var src  = extensionURL('/public/destroy.js');
-          var code = 'var script = document.createElement("script");' +
-            'script.src = "{}";' +
-            'document.body.appendChild(script);' +
-            'delete window.annotator;';
-
           if (isInjected) {
             chromeTabs.executeScript(tab.id, {
-              code: code.replace('{}', src)
+              file: '/public/destroy.js'
             }, resolve);
           } else {
             resolve();
@@ -197,7 +191,7 @@
 
     function isSidebarInjected(tabId) {
       return new Promise(function (resolve, reject) {
-        return chromeTabs.executeScript(tabId, {code: 'window.annotator'}, function (result) {
+        return chromeTabs.executeScript(tabId, {code: '!!window.annotator'}, function (result) {
           resolve((result && result[0] === true) || false);
         });
       });
@@ -205,12 +199,7 @@
 
     function injectConfig(tabId) {
       return new Promise(function (resolve) {
-        var src  = extensionURL('/public/config.js');
-        var code = 'var script = document.createElement("script");' +
-          'script.src = "{}";' +
-          'document.body.appendChild(script);';
-
-        chromeTabs.executeScript(tabId, {code: code.replace('{}', src)}, resolve);
+        chromeTabs.executeScript(tabId, {file: '/public/config.js'}, resolve);
       });
     }
   }
