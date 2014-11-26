@@ -19,6 +19,7 @@
 //   });
 function loadResources(resources, inject) {
   inject = inject || {};
+  resources = resources.slice();
 
   var injectStylesheet = inject.stylesheet || function injectStylesheet(href, fn) {
     var link = document.createElement('link');
