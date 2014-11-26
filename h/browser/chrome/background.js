@@ -1,9 +1,11 @@
 (function () {
   'use strict';
 
+  var manifest = chrome.runtime.getManifest();
   var browserExtension = new h.HypothesisChromeExtension({
     chromeTabs: chrome.tabs,
     chromeBrowserAction: chrome.browserAction,
+    sidebarResources: manifest['hypothesis_application_resources'],
     extensionURL: function (path) {
       return chrome.extension.getURL(path);
     },

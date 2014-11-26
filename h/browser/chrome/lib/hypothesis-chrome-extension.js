@@ -36,6 +36,7 @@
     var state = new h.TabState(store.all(), onTabStateChange);
     var browserAction = new h.BrowserAction(chromeBrowserAction);
     var sidebar = new h.SidebarInjector(chromeTabs, {
+      resources: options.sidebarResources,
       extensionURL: options.extensionURL,
       isAllowedFileSchemeAccess: options.isAllowedFileSchemeAccess,
     });

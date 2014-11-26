@@ -18,6 +18,7 @@
 
     var isAllowedFileSchemeAccess = options.isAllowedFileSchemeAccess;
     var extensionURL = options.extensionURL;
+    var resources = options.resources;
 
     if (typeof extensionURL !== 'function') {
       throw new TypeError('createURL must be a function');
@@ -25,6 +26,10 @@
 
     if (typeof isAllowedFileSchemeAccess !== 'function') {
       throw new TypeError('isAllowedFileSchemeAccess must be a function');
+    }
+
+    if (!Array.isArray(resources)) {
+      throw new TypeError('resources must be an array of files');
     }
 
     /* Injects the Hypothesis sidebar into the tab provided. The promise
@@ -132,11 +137,22 @@
           if (!isInjected) {
             injectConfig(tab.id).then(function () {
               chromeTabs.executeScript(tab.id, {
-                code: 'window.annotator = true'
+                code: '(' + appendSidebarLink.toString() + ')("' + extensionURL('/public/') + '")'
               }, function () {
-                chromeTabs.executeScript(tab.id, {
-                  file: 'public/embed.js'
-                }, resolve);
+                loadResources(resources, {
+                  script: function (src, fn) {
+                    chromeTabs.executeScript(tab.id, {file: src}, function (result) {
+                      if (result) {
+                        fn();
+                      } else {
+                        fn(new Error('Failed to load script: ' + src));
+                      }
+                    });
+                  },
+                  stylesheet: function (src, fn) {
+                    chromeTabs.insertCSS(tab.id, {file: src}, fn);
+                  }
+                });
               });
             });
           } else {
