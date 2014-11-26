@@ -34,6 +34,7 @@
       "lib/help-page.js",
       "lib/errors.js",
       "lib/hypothesis-chrome-extension.js",
+      "lib/install.js",
       "background.js"
     ]
   },
@@ -49,5 +50,6 @@
     "lib/*",
     "help/*",
     "content/web/viewer.html"
-  ]
+  ],
+  "hypothesis_application_resources": {{ resource_json }}
 }

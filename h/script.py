@@ -82,6 +82,11 @@ def manifest(context, request):
     ext_version = '.'.join(version.replace('-', '.').split('.')[:4])
     manifest_file = resolve('h:browser/chrome/manifest.json').stream()
     manifest_tpl = Template(manifest_file.read())
+
+    layout = request.layout_manager.layout
+    resource_urls = map(lambda u: urlparse(u).path, layout.app_inject_urls)
+    resource_json = json.dumps(resource_urls, indent=2)
+
     src = request.resource_url(context)
     # We need to use only the host and port for the CSP script-src when
     # developing. If we provide a path such as /assets the CSP check fails.
@@ -90,7 +95,10 @@ def manifest(context, request):
     if urlparse(src).hostname not in ('localhost', '127.0.0.1'):
         src = urljoin(src, request.webassets_env.url)
     with open('manifest.json', 'w') as f:
-        f.write(manifest_tpl.render(src=src, version=ext_version))
+        f.write(manifest_tpl.render(
+            src=src,
+            version=ext_version,
+            resource_json=resource_json))
 
 
 def build_extension(env, browser, content_dir):
@@ -115,6 +123,9 @@ def build_extension(env, browser, content_dir):
 
     # Copy the extension code
     merge('../../h/browser/' + browser, './')
+
+    # Copy the install script into the lib directory.
+    copyfile('../../h/static/scripts/install.js', './lib/install.js')
 
     # Copy over the bootstrap and destroy scripts
     copyfile('../../h/static/bootstrap.js', content_dir + '/bootstrap.js')
@@ -141,7 +152,6 @@ def build_extension(env, browser, content_dir):
 
     if browser == 'chrome':
         manifest(context, request)
-    embed(content_dir + '/embed.js', context, request)
 
     # Reset the directory
     chdir(old_dir)
@@ -205,7 +215,6 @@ def extension(args, console, settings):
     elif len(args) == 3:
         assets_url = settings['webassets.base_url']
     else:
-        settings['webassets.base_url'] = args[3]
         assets_url = args[3]
 
     browser = args[1]
