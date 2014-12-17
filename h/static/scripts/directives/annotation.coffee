@@ -334,6 +334,7 @@ annotation = [
 
       scope.share = (event) ->
         scope.$evalAsync ->
+          event.stopPropagation()
           $container = angular.element(event.target).parent()
           $container.addClass('open').find('input').focus().select()
           $document.one('click', (event) -> $container.removeClass('open'))

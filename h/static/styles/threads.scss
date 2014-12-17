@@ -98,8 +98,10 @@ $threadexp-width: .6em;
 }
 
 .thread-reply {
-  margin-top: -2.153em;
   margin-bottom: .8em;
+  //margin-top: -2.153em;
+  //z-index: 1;
+  //position: relative;
 }
 
 .thread-message:hover + .thread-reply {
