@@ -6,6 +6,49 @@ from pyramid.security import Allow, Authenticated, Everyone, ALL_PERMISSIONS
 
 _ = TranslationStringFactory(__package__)
 
+ANALYSIS = {
+    'filter': {
+        'uri': {
+            'type': 'pattern_capture',
+            'preserve_original': '1',
+            'patterns': [
+                '([^\\/\\?\\#\\.]+)',
+                '([a-zA-Z0-9]+)(?:\\.([a-zA-Z0-9]+))*',
+                '([a-zA-Z0-9-]+)(?:\\.([a-zA-Z0-9-]+))*',
+            ]
+        },
+        'user': {
+            'type': 'pattern_capture',
+            'preserve_original': '1',
+            'patterns': ['^acct:((.+)@.*)$']
+        }
+    },
+    'analyzer': {
+        'thread': {
+            'tokenizer': 'path_hierarchy'
+        },
+        'lower_keyword': {
+            'type': 'custom',
+            'tokenizer': 'keyword',
+            'filter': 'lowercase'
+        },
+        'uri_index': {
+            'tokenizer': 'keyword',
+            'filter': ['uri', 'unique']
+        },
+        'uri_search': {
+            'tokenizer': 'keyword',
+        },
+        'user': {
+            'tokenizer': 'keyword',
+            'filter': ['user', 'lowercase']
+        },
+        'uni_normalizer': {
+            'tokenizer': 'icu_tokenizer',
+            'filter': ['icu_folding']
+        }
+    }
+}
 
 class Annotation(annotation.Annotation):
     def __acl__(self):
@@ -131,58 +174,7 @@ class Annotation(annotation.Annotation):
             'analyzer': 'thread'
         }
     }
-    __analysis__ = {
-        'filter': {
-            'uri': {
-                'type': 'pattern_capture',
-                'preserve_original': '1',
-                'patterns': [
-                    '([^\\/\\?\\#\\.]+)',
-                    '([a-zA-Z0-9]+)(?:\\.([a-zA-Z0-9]+))*',
-                    '([a-zA-Z0-9-]+)(?:\\.([a-zA-Z0-9-]+))*',
-                ]
-            },
-            'user': {
-                'type': 'pattern_capture',
-                'preserve_original': '1',
-                'patterns': ['^acct:((.+)@.*)$']
-            }
-        },
-        'analyzer': {
-            'thread': {
-                'tokenizer': 'path_hierarchy'
-            },
-            'lower_keyword': {
-                'type': 'custom',
-                'tokenizer': 'keyword',
-                'filter': 'lowercase'
-            },
-            'uri_index': {
-                'tokenizer': 'keyword',
-                'filter': ['uri', 'unique']
-            },
-            'uri_search': {
-                'tokenizer': 'keyword',
-            },
-            'user': {
-                'tokenizer': 'keyword',
-                'filter': ['user', 'lowercase']
-            },
-            'uni_normalizer': {
-                'tokenizer': 'icu_tokenizer',
-                'filter': ['icu_folding']
-            }
-        }
-    }
-
-    @classmethod
-    def get_analysis(cls):
-        return cls.__analysis__
 
 
 class Document(document.Document):
-    __analysis__ = {}
-
-    @classmethod
-    def get_analysis(cls):
-        return cls.__analysis__
+    pass
