@@ -37,6 +37,7 @@ module.exports = class Streamer
   # connection failures and sets up onmessage handlers.
   ###
   open: (transport, url, protocols) ->
+    return
     if this._state == ST_OPEN || this._state == ST_CONNECTING
       return
 
@@ -81,6 +82,7 @@ module.exports = class Streamer
   # Close the streamer socket.
   ###
   close: ->
+    return
     if this._state == ST_CLOSING or this._state == ST_CLOSED
       return
 
@@ -106,6 +108,7 @@ module.exports = class Streamer
   # is established.
   ###
   send: (data) ->
+    return
     if this._state == ST_OPEN
       this._sock.send(JSON.stringify(data))
     else
