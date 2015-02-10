@@ -5,6 +5,7 @@ import colander
 import deform
 import horus.events
 import horus.views
+from pyramid.httpexceptions import HTTPFound
 from horus.lib import FlashMessage
 from horus.resources import UserFactory
 from pyramid import httpexceptions
@@ -145,6 +146,20 @@ class ForgotPasswordController(horus.views.ForgotPasswordController):
     pass
 
 
+@view_auth_defaults
+@view_config(attr='forgot_password', route_name='activate_account')
+class ActivateAccountController(horus.views.ForgotPasswordController):
+    def forgot_password(self):
+        res = super(ActivateAccountController, self).forgot_password()
+
+        if isinstance(res, HTTPFound):
+            self.request.session.pop_flash()
+            msg = 'An email has been sent with your activation url'
+            FlashMessage(self.request, msg, kind='success')
+
+        return res
+
+
 @view_defaults(accept='application/json', name='app', renderer='json')
 @view_config(
     attr='forgot_password',
@@ -161,6 +176,15 @@ class AsyncForgotPasswordController(ForgotPasswordController):
         request = self.request
         request.matchdict = request.POST
         return super(AsyncForgotPasswordController, self).reset_password()
+
+
+@view_defaults(accept='application/json', name='app', renderer='json')
+@view_config(
+    attr='forgot_password',
+    request_param='__formid__=activate_account'
+)
+class AsyncActivateAccountController(ActivateAccountController):
+    __view_mapper__ = AsyncFormViewMapper
 
 
 @view_auth_defaults
@@ -279,11 +303,18 @@ class ProfileController(horus.views.ProfileController):
 class AsyncProfileController(ProfileController):
     __view_mapper__ = AsyncFormViewMapper
 
+#
+# @view_auth_defaults
+# @view_config(attr='forgot_password', route_name='activate_account')
+# def activate_account(request):
+#     return {}
+
 
 def includeme(config):
     config.add_route('disable_user', '/disable/{user_id}',
                      factory=UserFactory,
                      traverse="/{user_id}")
+    config.add_route('activate_account', '/activate_account')
 
     config.include('horus')
     config.add_request_method(name='user')  # horus override (unset property)

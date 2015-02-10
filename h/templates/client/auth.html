@@ -267,4 +267,44 @@
     </div>
   </form>
   <!--/ Reset password -->
+
+  <!-- Activate account -->
+  <form data-title="Activate account"
+        data-value="activate_account"
+        class="form tab-pane"
+        name="activate_account"
+        form-validate
+        novalidate>
+
+    <p class="form-description form-error"
+       ng-show="activate_account.responseErrorMessage">
+      {{activate_account.responseErrorMessage}}
+    </p>
+    <div class="form-field">
+      <label class="form-label" for="field-forgot-email"
+             >Please enter your email address:</label>
+      <input class="form-input" id="field-forgot-email"
+             type="email" name="email" value=""
+             required autocapitalize="false" ng-model="model.email" />
+      <ul class="form-error-list">
+        <li class="form-error"
+            ng-show="activate_account.$error.email"
+            >Is this an email address?</li>
+        <li class="form-error"
+            ng-show="activate_account.$error.required"
+            >Please enter your email.</li>
+        <li class="form-error"
+            ng-show="activate_account.$error.response"
+            >{{activate_account.email.responseErrorMessage}}</li>
+      </ul>
+    </div>
+
+    <div class="form-actions">
+      <div class="form-actions-buttons">
+        <button class="btn" type="submit" name="activate_account"
+                status-button="activate_account">Send activation code</button>
+      </div>
+    </div>
+  </form>
+  <!-- / Forgot password -->
 </div>

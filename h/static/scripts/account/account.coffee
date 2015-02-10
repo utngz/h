@@ -4,6 +4,7 @@ AUTH_SESSION_ACTIONS = [
   'register'
   'forgot_password'
   'reset_password'
+  'activate_account'
   'edit_profile'
   'disable_user'
 ]
@@ -55,18 +56,16 @@ configure = [
 
     $locationProvider.html5Mode(true)
 
-    $routeProvider.when '/login',
+    routeOptions =
       controller: 'AuthPageController'
       templateUrl: 'auth.html'
-    $routeProvider.when '/register',
-      controller: 'AuthPageController'
-      templateUrl: 'auth.html'
-    $routeProvider.when '/forgot_password',
-      controller: 'AuthPageController'
-      templateUrl: 'auth.html'
-    $routeProvider.when '/reset_password/:code?',
-      controller: 'AuthPageController'
-      templateUrl: 'auth.html'
+
+    $routeProvider.when('/login', routeOptions)
+    $routeProvider.when('/register', routeOptions)
+    $routeProvider.when('/forgot_password', routeOptions)
+    $routeProvider.when('/reset_password/:code?', routeOptions)
+    $routeProvider.when('/activate_account/:code?', routeOptions)
+    $routeProvider.when('/activate_account', routeOptions)
 
     identityProvider.checkAuthentication = [
       '$q', 'session',
