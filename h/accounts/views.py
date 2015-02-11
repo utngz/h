@@ -5,9 +5,9 @@ import colander
 import deform
 import horus.events
 import horus.views
-from pyramid.httpexceptions import HTTPFound
 from horus.lib import FlashMessage
 from horus.resources import UserFactory
+from horus.strings import UIStringsBase
 from pyramid import httpexceptions
 from pyramid.view import view_config, view_defaults
 
@@ -146,18 +146,49 @@ class ForgotPasswordController(horus.views.ForgotPasswordController):
     pass
 
 
+# An object to be used to override the defualt horus ui strings so that we
+# can return activation specific messages to the client. There is a todo
+# in the horus code to make the templates overridable in subclasses so this
+# patch should be removeable in future.
+class patched_password_strings:
+    patched_str = UIStringsBase()
+    patched_str.reset_password_email_subject = \
+        'Activate your Hypothesis account'
+    patched_str.reset_password_email_body = ('''\
+Hello, {username}!
+To activate your Hypothes.is account please click the following link:
+{link}
+If you did not request an activation code for your hypothesis account
+please ignore this email.
+Regards,
+{domain}\n''')
+    patched_str.reset_password_email_sent = \
+        'Please check your e-mail to activate your account'
+
+    def __init__(self, controller):
+        self.controller = controller
+
+    def __enter__(self):
+        self.cached = self.controller.Str
+        self.controller.Str = self.patched_str
+
+    def __exit__(self, type, value, traceback):
+        self.controller.Str = self.cached
+
+
 @view_auth_defaults
-@view_config(attr='forgot_password', route_name='activate_account')
+@view_config(attr='forgot_password', route_name='request_activation')
+@view_config(attr='reset_password', route_name='activate_account')
 class ActivateAccountController(horus.views.ForgotPasswordController):
     def forgot_password(self):
-        res = super(ActivateAccountController, self).forgot_password()
+        # We patch the Str property so that the forgot password method
+        # uses the activation language for emails and notifications.
+        with patched_password_strings(self):
+            return super(ActivateAccountController, self).forgot_password()
 
-        if isinstance(res, HTTPFound):
-            self.request.session.pop_flash()
-            msg = 'An email has been sent with your activation url'
-            FlashMessage(self.request, msg, kind='success')
-
-        return res
+    def reset_password(self):
+        with patched_password_strings(self):
+            return super(ActivateAccountController, self).reset_password()
 
 
 @view_defaults(accept='application/json', name='app', renderer='json')
@@ -179,6 +210,10 @@ class AsyncForgotPasswordController(ForgotPasswordController):
 
 
 @view_defaults(accept='application/json', name='app', renderer='json')
+@view_config(
+    attr='forgot_password',
+    request_param='__formid__=request_activation'
+)
 @view_config(
     attr='forgot_password',
     request_param='__formid__=activate_account'
@@ -303,17 +338,12 @@ class ProfileController(horus.views.ProfileController):
 class AsyncProfileController(ProfileController):
     __view_mapper__ = AsyncFormViewMapper
 
-#
-# @view_auth_defaults
-# @view_config(attr='forgot_password', route_name='activate_account')
-# def activate_account(request):
-#     return {}
-
 
 def includeme(config):
     config.add_route('disable_user', '/disable/{user_id}',
                      factory=UserFactory,
                      traverse="/{user_id}")
+    config.add_route('request_activation', '/request_activation')
     config.add_route('activate_account', '/activate_account')
 
     config.include('horus')

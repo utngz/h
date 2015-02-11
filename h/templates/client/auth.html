@@ -1,5 +1,5 @@
 <div class="form-vertical tabbable"
-     tab-reveal="['forgot_password', 'reset_password']"
+     tab-reveal="['activate_account', 'request_activation', 'forgot_password', 'reset_password']"
      ng-controller="AuthController as vm"
      ng-form="form"
      ng-model="account.tab"
@@ -270,6 +270,46 @@
 
   <!-- Activate account -->
   <form data-title="Activate account"
+        data-value="request_activation"
+        class="form tab-pane"
+        name="request_activation"
+        form-validate
+        novalidate>
+
+    <p class="form-description form-error"
+       ng-show="request_activation.responseErrorMessage">
+      {{request_activation.responseErrorMessage}}
+    </p>
+    <div class="form-field">
+      <label class="form-label" for="field-forgot-email"
+             >Please enter your email address:</label>
+      <input class="form-input" id="field-forgot-email"
+             type="email" name="email" value=""
+             required autocapitalize="false" ng-model="model.email" />
+      <ul class="form-error-list">
+        <li class="form-error"
+            ng-show="request_activation.$error.email"
+            >Is this an email address?</li>
+        <li class="form-error"
+            ng-show="request_activation.$error.required"
+            >Please enter your email.</li>
+        <li class="form-error"
+            ng-show="request_activation.$error.response"
+            >{{request_activation.email.responseErrorMessage}}</li>
+      </ul>
+    </div>
+
+    <div class="form-actions">
+      <div class="form-actions-buttons">
+        <button class="btn" type="submit" name="request_activation"
+                status-button="request_activation">Send activation code</button>
+      </div>
+    </div>
+  </form>
+  <!-- / Request activation -->
+
+  <!-- Activate account -->
+  <form data-title="Choose password"
         data-value="activate_account"
         class="form tab-pane"
         name="activate_account"
@@ -280,31 +320,56 @@
        ng-show="activate_account.responseErrorMessage">
       {{activate_account.responseErrorMessage}}
     </p>
-    <div class="form-field">
-      <label class="form-label" for="field-forgot-email"
-             >Please enter your email address:</label>
-      <input class="form-input" id="field-forgot-email"
-             type="email" name="email" value=""
-             required autocapitalize="false" ng-model="model.email" />
+
+    <input type="hidden" name="code" value="{{model.code}}" ng-if="hasActivationCode"/>
+
+    <div class="form-field" ng-if="!hasActivationCode">
+      <label class="form-label" for="field-activate-code"
+        >Your reset code:
+        <span class="form-hint">(this will be emailed to you)</span>
+      </label>
+      <input class="form-input" id="field-activate-code"
+             type="text" name="code" value=""
+             required autocorrect="false" autocapitalize="false"
+             ng-model="model.code" />
       <ul class="form-error-list">
         <li class="form-error"
-            ng-show="activate_account.$error.email"
-            >Is this an email address?</li>
+            ng-show="activate_account.code.$error.required"
+            >Please enter your reset code</li>
         <li class="form-error"
-            ng-show="activate_account.$error.required"
-            >Please enter your email.</li>
+            ng-show="activate_account.code.$error.response"
+            >{{activate_account.code.responseErrorMessage}}</li>
+      </ul>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label" for="field-activate-password"
+             >Choose password:
+        <span class="form-hint">(at least two characters)</span>
+      </label>
+      <input class="form-input" id="field-activate-password"
+             type="password" name="password" value=""
+             required autocapitalize="false" autocorrect="false"
+             ng-minlength="2" ng-model="model.password" />
+      <ul class="form-error-list">
         <li class="form-error"
-            ng-show="activate_account.$error.response"
-            >{{activate_account.email.responseErrorMessage}}</li>
+            ng-show="activate_account.password.$error.required"
+            >Please choose a password.</li>
+        <li class="form-error"
+            ng-show="activate_account.password.$error.minlength"
+            >Passwords must be at least 2 characters.</li>
+        <li class="form-error"
+            ng-show="activate_account.password.$error.response"
+            >{{activate_account.password.responseErrorMessage}}</li>
       </ul>
     </div>
 
     <div class="form-actions">
       <div class="form-actions-buttons">
-        <button class="btn" type="submit" name="activate_account"
-                status-button="activate_account">Send activation code</button>
+        <button class="btn" type="submit" name="activate"
+                status-button="activate">Activate account</button>
       </div>
     </div>
   </form>
-  <!-- / Forgot password -->
+  <!--/ Activate account -->
 </div>

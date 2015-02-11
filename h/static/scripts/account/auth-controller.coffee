@@ -12,6 +12,8 @@ class AuthController
           when 'register' then 'login'
           when 'forgot_password' then 'reset_password'
           when 'reset_password' then 'login'
+          when 'request_activation' then 'activate_account'
+          when 'activate_account' then 'login'
           else $scope.account.tab
 
       angular.copy {}, $scope.model

@@ -4,6 +4,7 @@ AUTH_SESSION_ACTIONS = [
   'register'
   'forgot_password'
   'reset_password'
+  'request_activation'
   'activate_account'
   'edit_profile'
   'disable_user'
@@ -65,7 +66,7 @@ configure = [
     $routeProvider.when('/forgot_password', routeOptions)
     $routeProvider.when('/reset_password/:code?', routeOptions)
     $routeProvider.when('/activate_account/:code?', routeOptions)
-    $routeProvider.when('/activate_account', routeOptions)
+    $routeProvider.when('/request_activation', routeOptions)
 
     identityProvider.checkAuthentication = [
       '$q', 'session',
