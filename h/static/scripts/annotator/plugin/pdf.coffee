@@ -28,7 +28,7 @@ class window.PDFTextMapper extends PageTextMapperCore
   requiresSmartStringPadding: true
 
   # Get the number of pages
-  getPageCount: -> @_viewer.pages.length
+  getPageCount: -> @_doc.numPages
 
   # Where are we in the document?
   getPageIndex: -> @_app.page - 1
@@ -52,6 +52,7 @@ class window.PDFTextMapper extends PageTextMapperCore
       @_viewer = @_app.pdfViewer
     else
       @_app = @_viewer = PDFView
+    @_doc = @_app.pdfDocument
 
     @setEvents()
 
@@ -67,8 +68,8 @@ class window.PDFTextMapper extends PageTextMapperCore
 
   # Install watchers for various events to detect page rendering/unrendering
   setEvents: ->
-    # Detect page rendering
-    addEventListener "pagerender", (evt) =>
+
+    pagerender = (evt) =>
 
       # If we have not yet finished the initial scanning, then we are
       # not interested.
@@ -76,6 +77,10 @@ class window.PDFTextMapper extends PageTextMapperCore
 
       index = evt.detail.pageNumber - 1
       @_onPageRendered index
+
+    # Detect page rendering
+    addEventListener "pagerender", pagerender
+    addEventListener "pagerendered", pagerender
 
     # Detect page un-rendering
     addEventListener "DOMNodeRemoved", (evt) =>
@@ -147,7 +152,7 @@ class window.PDFTextMapper extends PageTextMapperCore
   # adequate spacing.
   _extractPageText: (pageIndex) ->
     # Wait for the page to load
-    @_app.pdfDocument.getPage(pageIndex + 1).then (page) =>
+    @_doc.getPage(pageIndex + 1).then (page) =>
 
       # Wait for the data to be extracted
       page.getTextContent().then (data) =>

@@ -85,7 +85,7 @@ We read ``PDFViewerApplication.documentFingerprint`` and
 Determining the number of pages of the document
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We read ``PDFViewerApplication.pdfViewer.pages.length``
+We read ``PDFViewerApplication.pdfDocument.numPages``
 
 Determining the index of the currently viewed page
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -109,7 +109,7 @@ Determining whether or not a given page is fully rendered
 Detecting the event when a new page is rendered
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  We register a listener to the ``pagerender`` events.
+-  We register a listener to ``pagerender`` and ``pagerendered`` events.
 -  When the listener is called, we extract the page number by reading
    ``event.detail.pageNUmber``.
 
