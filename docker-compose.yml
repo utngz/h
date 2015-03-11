@@ -1,0 +1,32 @@
+web:
+  build: .
+  links:
+    - elasticsearch
+    - nsqd
+  command: >
+    --skip-runit --
+    /bin/sh -c '
+    make deps &&
+    exec gunicorn -b 0.0.0.0:5000 --reload --paste conf/development.ini
+    '
+  ports:
+    - "5000:5000"
+
+elasticsearch:
+  image: olavgg/elasticsearch
+  # Ensure that the ICU plugin is enabled
+  command: >
+    /bin/sh -c
+    '
+    ln -snf /elasticsearch/plugins /data &&
+    exec /elasticsearch/bin/elasticsearch
+    '
+  ports:
+    - "9200:9200"
+
+nsqd:
+  image: nsqio/nsq
+  command: /nsqd
+  ports:
+    - "4150:4150"
+    - "4151:4151"
