@@ -175,12 +175,12 @@ class AnnotationViewerController
 
 class ViewerController
   this.$inject = [
-    '$scope', '$route', 'annotationUI', 'crossframe', 'annotationMapper',
-    'auth', 'streamer', 'streamfilter', 'store'
+    '$scope', '$route', '$rootScope', 'annotationUI', 'crossframe', 'annotationMapper',
+    'auth', 'localstorage', 'streamer', 'streamfilter', 'store'
   ]
   constructor:   (
-     $scope,   $route, annotationUI, crossframe, annotationMapper,
-     auth,   streamer,   streamfilter,   store
+     $scope,   $route,   $rootScope,   annotationUI,   crossframe,   annotationMapper,
+     auth,   localstorage,   streamer,   streamfilter,   store
   ) ->
     # Tells the view that these annotations are embedded into the owner doc
     $scope.isEmbedded = true
@@ -210,6 +210,21 @@ class ViewerController
         return unless auth.user
         query.user = auth.user
 
+      # Try to determine the "main" URL
+      url = crossframe.providers[0]?.entities[0] ? null
+
+      if url?
+        # check if we are supposed to focus on one of the annotations
+        console.log "Checking for jump command for", url
+        key = 'hypothesis.focus.' + url
+        command = localstorage.getObject key
+        if command
+          console.log "Discovered jump command", command
+          $scope.jumpCommand = command # Store the jump command
+        else
+          console.log "No jump command for", url
+
+      # Load annotations for all the entities at all providers
       for p in crossframe.providers
         for e in p.entities when e not in loaded
           loaded.push e
@@ -252,6 +267,17 @@ class ViewerController
 
     $scope.hasFocus = (annotation) ->
       annotation?.$$tag in ($scope.focusedAnnotations ? [])
+
+    $rootScope.$on 'annotationsLoaded', (annotations) ->
+      if $scope.jumpCommand? # Are we supposed to jump to an annotation?
+        id = $scope.jumpCommand.id
+        annotation = $scope.threading.idTable[id]?.message
+        if annotation?
+          console.log "Jumping to", annotation
+          annotationUI.selectAnnotations [annotation]
+          $scope.scrollTo annotation
+        else
+          console.log "Something was loaded, but can't find annotation to jump to.", id
 
 angular.module('h')
 .controller('AppController', AppController)
