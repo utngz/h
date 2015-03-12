@@ -14,7 +14,9 @@
     <span class="annotation-citation"
           ng-if="!vm.embedded"
           ng-show="vm.document.title">
-      on &ldquo;<a href="{{vm.document.uri}}" target="_blank"
+      on &ldquo;<a href="{{vm.document.uri}}"
+                   target="_blank"
+                   ng-click="storeCommand(vm.document.uri)"
                    >{{vm.document.title}}</a>&rdquo;
       <span class="annotation-citation-domain"
             ng-show="vm.document.domain != vm.document.title"

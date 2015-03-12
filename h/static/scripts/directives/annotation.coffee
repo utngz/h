@@ -299,8 +299,8 @@ AnnotationController = [
 # an embedded widget.
 ###
 annotationDirective = [
-  '$document',
-  ($document) ->
+  '$document', 'localstorage',
+  ($document,   localstorage) ->
     linkFn = (scope, elem, attrs, [ctrl, thread, threadFilter, counter]) ->
       # Observe the embedded attribute
       attrs.$observe 'annotationEmbedded', (value) ->
@@ -312,6 +312,15 @@ annotationDirective = [
           event.preventDefault()
           scope.$evalAsync ->
             ctrl.save()
+
+      scope.storeCommand = (uri) ->
+        command = {
+          id: ctrl.annotation.id
+          timestamp: Date.now()
+        }
+
+        key = 'hypothesis.focus.' + uri
+        localstorage.setObject key, command
 
       scope.share = (event) ->
         $container = angular.element(event.currentTarget).parent()
