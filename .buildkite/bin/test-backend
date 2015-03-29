@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -eu
+
+echo "--- Installing dependencies"
+pip install -e .[testing]
+
+echo "+++ Running tests"
+python setup.py test --cov

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -eu
+
+echo "--- Installing dependencies"
+npm install
+
+echo "+++ Running tests"
+$(npm bin)/karma start h/static/scripts/karma.config.js --single-run
+$(npm bin)/karma start h/browser/chrome/karma.config.js --single-run
