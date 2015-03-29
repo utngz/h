@@ -2,6 +2,12 @@
 
 set -eu
 
+export DEBIAN_FRONTEND=noninteractive
+
+echo "--- Installing PhantomJS"
+apt-get update
+apt-get install -y phantomjs
+
 echo "--- Installing dependencies"
 npm install
 
