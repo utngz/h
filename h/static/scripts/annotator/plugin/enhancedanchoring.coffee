@@ -1,15 +1,99 @@
 Annotator = require('annotator')
 $ = Annotator.$
 
-# Fake two-phase / pagination support, used for HTML documents
-class DummyDocumentAccess
+# A NodeFilter bitmask that matches node types included by `Node.textContent`.
+TEXT_CONTENT_FILTER = (
+  NodeFilter.SHOW_ALL &
+  ~NodeFilter.SHOW_COMMENT &
+  ~NodeFilter.SHOW_PROCESSING_INSTRUCTION
+)
+
+
+class DefaultAccessStrategy
 
   @applicable: -> true
+  getCorpus: -> document.body.textContent
   getPageIndex: -> 0
   getPageCount: -> 1
   getPageIndexForPos: -> 0
   isPageMapped: -> true
-  scan: ->
+
+  getStartPosForNode: (node) ->
+    offset = 0
+
+    # Walk the nodes of the body included by `Node.textContent`.
+    walker = document.createTreeWalker(document.body, TEXT_CONTENT_FILTER)
+
+    # Start from the current node.
+    walker.currentNode = node
+
+    # Continue until the current node is null.
+    while node?
+
+      # Step backwards through siblings, to count the leading content.
+      while cur = walker.previousSibling()
+        offset += cur.textContent.length
+
+      # Step up to the parent and continue until done.
+      node = walker.parentNode()
+
+    return offset
+
+  getEndPosForNode: (node) ->
+    return this.getStartPosForNode(node) + node.textContent.length
+
+  getContextForCharRange: (start, end) ->
+    corpus = this.getCorpus()
+    return [corpus.substr(start-32, 32), corpus.substr(end, 32)]
+
+  getMappingsForCharRange: (start, end) ->
+    # Seek a TreeWalker forward by the given offset. The length of all the text
+    # content skipped in this manner may be less than the requested offset.
+    # The return value is the remainder, or zero, after advancing the walker
+    # up to, but not more than, the requested offset.
+    _seek = (walker, offset) ->
+      while offset > 0
+        next = offset - walker.currentNode.textContent.length
+
+        # If this node is longer than the offset, step in to it.
+        if next < 0
+
+          # Finish if there is no smaller step to take.
+          if walker.firstChild() is null
+            break
+
+          # Otherwise, continue with the first child.
+          else
+            continue
+
+        # Step over this node. Failing that, step out or error.
+        else if walker.nextSibling() is null
+          if walker.nextNode() is null
+            throw new Error('Unexpected document end')
+
+        # Update the offset and continue.
+        offset = next
+
+      # Return the remaining offset.
+      return offset
+
+    # Create a Range object for storing the result.
+    range = document.createRange()
+
+    # Walk the nodes of the body included by `Node.textContent`.
+    walker = document.createTreeWalker(document.body, TEXT_CONTENT_FILTER)
+
+    # Seek to the start and update the range.
+    offset = _seek(walker, start)
+    range.setStart(walker.currentNode, offset)
+
+    # Seek to the end and update the range.
+    offset = _seek(walker, end - start + offset)
+    range.setEnd(walker.currentNode, offset)
+
+    # Return a section map providing this range for page 0.
+    return sections: [{realRange: range}]
+
 
 # Abstract anchor class.
 class Anchor
@@ -133,14 +217,12 @@ class Annotator.Plugin.EnhancedAnchoring extends Annotator.Plugin
   # Initializes the available document access strategies
   _setupDocumentAccessStrategies: ->
     @documentAccessStrategies = [
-      # Default dummy strategy for simple HTML documents.
-      # The generic fallback.
-      name: "Dummy"
-      mapper: DummyDocumentAccess
+      # Default strategy for simple HTML documents.
+      name: "Basic"
+      mapper: DefaultAccessStrategy
     ]
 
     this
-
 
   # Initializes the components used for analyzing the document
   chooseAccessPolicy: ->
