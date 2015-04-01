@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Build the Chrome extension. The following environment variables must be set
+# for the build.
+#
+#     HYPOTHESIS_EXT_CHROME_BASE: extension base URL
+#     HYPOTHESIS_EXT_CHROME_ASSETS: extension assets path/URL
+#
+
+set -eu
+
+export DEBIAN_FRONTEND=noninteractive
+
+echo "--- Installing zip"
+apt-get update
+apt-get install -y zip
+
+echo "--- Installing h"
+pip install -e .
+
+echo "+++ Building Chrome extension"
+hypothesis-buildext conf/production.ini chrome \
+    --base "$HYPOTHESIS_EXT_CHROME_BASE" \
+    --assets "$HYPOTHESIS_EXT_CHROME_ASSETS"
+zip -r build/chrome.zip build/chrome
