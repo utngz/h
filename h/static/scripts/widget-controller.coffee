@@ -3,11 +3,11 @@ angular = require('angular')
 
 module.exports = class WidgetController
   this.$inject = [
-    '$scope', 'annotationUI', 'crossframe', 'annotationMapper',
+    '$rootScope', '$scope', 'annotationUI', 'crossframe', 'annotationMapper',
     'streamer', 'streamFilter', 'store'
   ]
   constructor:   (
-     $scope,   annotationUI, crossframe, annotationMapper,
+     $rootScope, $scope,   annotationUI, crossframe, annotationMapper,
      streamer,   streamFilter,   store
   ) ->
     # Tells the view that these annotations are embedded into the owner doc
@@ -73,3 +73,35 @@ module.exports = class WidgetController
       !!($scope.focusedAnnotations ? {})[annotation?.$$tag]
 
     $scope.notOrphan = (container) -> !container?.message?.$orphan
+
+    $scope.filterView = (container) ->
+      # If an annnoation is being edited it should show up in any view.
+      if not container?.message?.permissions?.read?
+        return true
+      else if $rootScope.socialview.name == 'All'
+        # Filter out group annotations.
+        str1 = "group:"
+        re1 = new RegExp(str1, "g");
+        # if re1.test(container?.message?.tags)
+        #   for tag in container?.message?.tags
+        #     console.log tag
+        !re1.test(container?.message?.tags)
+      else if $rootScope.socialview.name != 'All'
+        # console.log $rootScope.socialview.name
+        # console.log container?.message?.tags?[0]?
+        # debugger
+        # if container?.message?.tags?[0] == undefined
+        #   return false
+        # else
+        str2 = "group:" + $rootScope.socialview.name
+        re2 = new RegExp(str2, "g");
+        re2.test(container?.message?.tags)
+    
+    $rootScope.views = [
+        {name:'All', icon:'h-icon-public', selected:true}
+        # {name:'groupName', icon:'h-icon-group', selected:false}
+    ]
+
+    $rootScope.viewnames = ['All']
+
+    $rootScope.socialview = $rootScope.views[0]

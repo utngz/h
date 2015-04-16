@@ -143,7 +143,6 @@ html {
 .form-vertical {
   select, textarea, input, button {
     display: block;
-    // margin-top: .75em;
   }
 }
 
@@ -180,19 +179,20 @@ html {
 }
 
 .dropdown-menu {
-  @include rotateX(90deg);
   background: $white;
   border: solid 1px $gray-lighter;
-  margin-top: .8em;
-  top: 100%;
   float: left;
   opacity: 0;
   pointer-events: none;
   position: absolute;
+  margin-top: 1px;
   z-index: 2;
+  min-width: 130px;
 
   li:not(.ng-hide) {
     text-align: left;
+    padding: 5px 10px;
+    cursor: pointer;
 
     a {
       display: block;
@@ -208,20 +208,8 @@ html {
     &.selected {
       color: black;
       font-weight: 600;
-      line-height: 1;
       &:before {
         font-size: .7em;
-      }
-    }
-    &.inactive {
-      font-weight: 400;
-      color: $gray-lighter;
-      cursor: default;
-      &:hover {
-        color: $gray-lighter;
-      }
-      & * {
-        cursor: default;
       }
     }
 
@@ -234,50 +222,17 @@ html {
     color: inherit;
   }
 
-  // These psuedo-elements add the speech bubble tail / triangle.
-  &:before, &:after {
-    // http://www.red-team-design.com/css-diagonal-borders-still-not-rendering-properly-on-firefox
-    @include scale(.9999);
-    border-color: rgba(0, 0, 0, 0);
-
-    border-style: solid;
-    border-width: 0 7px 6px 7px;
-    content: '';
-    position: absolute;
-    height: 0;
-    left: 0;
-    width: 0;
-  }
-
-  &:before {
-    border-bottom-color: $gray-lighter;
-    top: -7px;
-  }
-
-  &:after {
-    border-bottom-color: $white;
-    top: -6px;
-    z-index: 3;
-  }
-
   // Aligns the dropdown menu to right
   &.pull-right {
     right: 0;
     left: auto;
     text-align: right;
-
-    // Align the tail
-    &:before, &:after {
-      left: auto;
-      right: 0;
-    }
   }
 }
 
 .open {
   & > .dropdown-menu {
     @include smallshadow;
-    @include rotateX(0);
     opacity: 1;
     pointer-events: auto;
   }

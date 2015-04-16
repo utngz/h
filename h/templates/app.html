@@ -12,9 +12,11 @@
       <div class="dropdown pull-right user-picker">
         <span role="button"
               class="dropdown-toggle"
-              data-toggle="dropdown">{% raw %}{{ auth.user|persona }}{% endraw %}<!--
-          --><span class="provider" ng-show="auth.user">/{% raw %}{{ auth.user|persona:'provider' }}{% endraw %}</span><!--
-          --><i class="h-icon-arrow-drop-down"></i></span>
+              title="{% raw %}{{ auth.user|persona:'provider' }}{% endraw %}" 
+              data-toggle="dropdown">
+              <i class="h-icon-arrow-drop-down"></i>
+              {% raw %}{{ auth.user|persona }}{% endraw %}
+        </span>
         <ul class="dropdown-menu pull-right" role="menu">
           <li ng-show="auth.user"><a href="" ng-click="accountDialog.visible='true'">Account</a></li>
           <li><a href="mailto:support@hypothes.is">Feedback</a></li>
@@ -36,6 +38,10 @@
            ng-click="viaLinkDialog.visible = true"></i>
       </span>
       <!-- / Share this page -->
+
+      <!-- View Control -->
+      <div class="dropdown pull-right viewcontrol"></div>
+      <!-- / View Control -->
 
       <!-- Searchbar -->
       <div class="simple-search"
@@ -81,6 +87,10 @@
     <div via-link-dialog="" ng-show="viaLinkDialog.visible"></div>
     <!-- / Share View Dialog -->
 
+    <!-- Group Dialog -->
+    <div newgroupdialog="" ng-show="groupDialog.visible"></div>
+    <!-- / Group Dialog -->
+
     <!-- Angular view -->
     <main class="content" ng-view=""></main>
   </div>
@@ -105,6 +115,12 @@
   </script>
   <script type="text/ng-template" id="thread.html">
     {{ include_raw("h:templates/client/thread.html") }}
+  </script>
+  <script type="text/ng-template" id="viewcontrol.html">
+    {{ include_raw("h:templates/client/viewcontrol.html") }}
+  </script>
+  <script type="text/ng-template" id="newgroup_dialog.html">
+    {{ include_raw("h:templates/client/newgroup_dialog.html") }}
   </script>
 {% endblock %}
 

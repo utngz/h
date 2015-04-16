@@ -46,6 +46,7 @@ module.exports = class AppController
     # App dialogs
     $scope.accountDialog = visible: false
     $scope.viaLinkDialog = visible: false
+    $scope.groupDialog = visible: false
 
     oncancel = ->
       $scope.accountDialog.visible = false

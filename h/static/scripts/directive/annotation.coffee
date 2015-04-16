@@ -82,6 +82,14 @@ AnnotationController = [
     # @name annotation.AnnotationController#isPrivate
     # @returns {boolean} True if the annotation is private to the current user.
     ###
+    this.isGroup = ->
+      permissions.isGroup model.permissions
+
+    ###*
+    # @ngdoc method
+    # @name annotation.AnnotationController#isPrivate
+    # @returns {boolean} True if the annotation is private to the current user.
+    ###
     this.isPrivate = ->
       permissions.isPrivate model.permissions, model.user
 
@@ -159,8 +167,13 @@ AnnotationController = [
         return flash.info('Please add text or a tag before publishing.')
 
       # Update stored tags with the new tags of this annotation
+      if $rootScope.level.name != 'public' or 'private'
+        if $rootScope.socialview.name != 'All'
+          @annotation.tags.push { text:"group:" + $rootScope.socialview.name }
+
       newTags = @annotation.tags.filter (tag) ->
         tag.text not in (model.tags or [])
+
       tags.store(newTags)
 
       angular.extend model, @annotation,
@@ -197,6 +210,8 @@ AnnotationController = [
       if auth.user?
         if permissions.isPublic model.permissions
           reply.permissions = permissions.public()
+        else if permissions.isGroup model.permissions
+          reply.permissions = permissions.group()
         else
           reply.permissions = permissions.private()
 
@@ -254,6 +269,11 @@ AnnotationController = [
         @showDiff ?= diffFlags.shouldShowDiff
       else
         @showDiff = undefined
+
+    $scope.filtertags = (tag) ->
+      str = "group:"
+      re = new RegExp(str1, "g");
+      !re.test(tag.text)
 
     updateTimestamp = (repeat=false) =>
       @timestamp = time.toFuzzyString model.updated

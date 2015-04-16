@@ -1,0 +1,53 @@
+<div id="dialog" class="sheet content">
+	<i class="close h-icon-close"
+   	   role="button"
+       title="Close"
+       ng-click="groupDialog.visible = false; showLink = false;"></i>
+    <div class="form-vertical tabbable">
+	    <div class="form tab-pane" data-title="New group">
+		    <div ng-hide="showLink">
+		    	<form name="newgroup"
+		    		  ng-submit="newgroup()"
+		    		  form-validate>
+		    		<div class="form-field">
+						<p class="form-description">Create a new group and annotate collaboratively. Take the generated name or give it your own:</p>
+						<input id="nameGroup"
+							   name="groupName" 
+							   class="form-input"
+						       type="text"
+							   ng-minlength="3"
+							   ng-maxlength="30"
+							   ng-model="groupName"></input>
+						<ul class="form-error-list">
+						    <li class="form-error" ng-show="newgroup.groupName.$error.required">Please enter your current password.</li>
+						    <li class="form-error" ng-show="newgroup.groupName.$error.minlength">The group name must be at least 3 characters.</li>
+						    <li class="form-error" ng-show="newgroup.groupName.$error.maxlength">Max group name length is 30 characters.</li>
+						</ul>
+			       	</div>
+			       	<div class="form-actions">
+				   		<div class="form-actions-buttons">
+				   			<button class="btn btn-primary" 
+				   					type="submit"
+               						status-button="newgroup">
+               						Create Group</button>		
+				   		</div>
+				    </div>
+			    </form>
+			</div>
+
+			<!-- Get the link -->
+	        <div class="form-field" ng-show="showLink">
+		        <p class="form-description">The link to your group is below, share it with anyone you would like to annotate this page with:</p>
+		        <input id="copyLink"
+						class="form-input"
+						type="text"
+						ng-value="groupLink"></input>
+		       	<div class="form-actions">
+			   		<div class="form-actions-message">
+			   			<p><a href="mailto:?subject=Annotate this&body=http://...">Share via email</a></p>
+			   		</div>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
