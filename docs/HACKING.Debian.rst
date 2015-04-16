@@ -12,7 +12,7 @@ add the ``universe`` package repositories.)
 
 Install the following packages::
 
-    $ apt-get -y --no-install-recommends \
+    $ apt-get -y --no-install-recommends install \
         build-essential \
         git \
         libevent-dev \
