@@ -87,3 +87,17 @@ $threadexp-width: 1em;
 .thread-load-more {
   clear: both;
 }
+
+.search-share-dialog-wrapper {
+    position: relative;
+
+    .share-dialog {
+	display: none;
+	position: relative;
+	top: 1em;
+    }
+
+    &.open .share-dialog {
+	display: block;
+    }
+}

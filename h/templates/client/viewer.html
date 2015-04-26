@@ -8,14 +8,38 @@
              when="{'0': 'No results for “{{search.query}}”.',
                     'one': 'Found one result.',
                     'other': 'Found {} results.'}"></span>
-      <a href="" ng-click="clearSelection()">Clear search</a>.</li>
+      <a href="" ng-click="clearSelection()">Clear search.</a>
+      <span class="search-share-dialog-wrapper">
+	<button class="small btn-clean"
+		ng-click="shareSelection($event)"
+		><i class="h-icon-share btn-icon"></i> Share</button>
+	<span class="share-dialog" ng-click="$event.stopPropagation()">
+	  <a class="h-icon-share"
+             target="_blank"
+             ng-href="{{shareURI}}"></a>
+          <input type="text" value="{{shareURI}}" readonly>
+	</span>
+      </span>
+  </li>
   <li ng-show="!threadFilter.active() && selectedAnnotations"
       ><span ng-pluralize
              count="selectedAnnotationsCount"
              when="{'0': 'No annotations selected.',
                     'one': 'Showing 1 selected annotation.',
                     'other': 'Showing {} selected annotations.'}"></span>
-      <a href="" ng-click="clearSelection()">Clear selection</a>.</li>
+      <a href="" ng-click="clearSelection()">Clear selection.</a>
+      <span class="search-share-dialog-wrapper">
+	<button class="small btn-clean"
+		ng-click="shareSelection($event)"
+		><i class="h-icon-share btn-icon"></i> Share</button>
+	<span class="share-dialog" ng-click="$event.stopPropagation()">
+	  <a class="h-icon-share"
+             target="_blank"
+             ng-href="{{shareURI}}"></a>
+          <input type="text" value="{{shareURI}}" readonly>
+	</span>
+      </span>
+  </li>
   <li ng-show="isStream">
     <span class="ng-cloak dropdown">
       <span role="button"

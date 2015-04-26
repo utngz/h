@@ -3,15 +3,15 @@ angular = require('angular')
 
 module.exports = class AppController
   this.$inject = [
-    '$controller', '$document', '$location', '$rootScope', '$route', '$scope',
-    '$window',
+    '$controller', '$document', '$location', '$rootScope', '$route', '$routeParams', '$scope',
+    '$timeout', '$window',
     'auth', 'drafts', 'identity',
     'permissions', 'streamer', 'annotationUI',
     'annotationMapper', 'threading'
   ]
   constructor: (
-     $controller,   $document,   $location,   $rootScope,   $route,   $scope,
-     $window,
+     $controller,   $document,   $location,   $rootScope,   $route,   $routeParams,   $scope,
+     $timeout,   $window,
      auth,   drafts,   identity,
      permissions,   streamer,   annotationUI,
      annotationMapper, threading
@@ -102,6 +102,30 @@ module.exports = class AppController
     $scope.clearSelection = ->
       $scope.search.query = ''
       annotationUI.clearSelectedAnnotations()
+
+    $scope.shareSelection = (event) ->
+      query = $routeParams.q
+
+      state = if query?
+        "q-" + query
+      else
+        "s-" + Object.keys(annotationUI.selectedAnnotationMap).join(",")
+
+      console.log "Saving state:", state
+
+      $timeout -> # This is here as a stand-in for saving the query
+        qID="fakeid"
+        url = "http://via.hypothes.is/#{qID}/whatever"
+        $scope.shareURI = new URL(url, this.baseURI).href
+
+      $container = angular.element(event.currentTarget).parent()
+      $container.addClass('open').find('input').focus().select()
+
+      event.stopPropagation()
+
+      $document.one('click', (event) -> $container.removeClass('open'))
+
+      null
 
     $scope.dialog = visible: false
 
