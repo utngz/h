@@ -62,6 +62,7 @@ module.exports = ['localStorage', 'permissions', '$rootScope', (localStorage, pe
         controller.$setViewValue level
 
       $rootScope.level = controller.$viewValue
+      console.log $rootScope.level
       scope.level = controller.$viewValue
 
     scope.levels = $rootScope.levels

@@ -5,8 +5,8 @@
 # @description The dialog that generates a via link to the page h is currently
 # loaded on.
 ###
-module.exports = ['$timeout', 'crossframe', 'via', (
-                   $timeout,   crossframe,   via) ->
+module.exports = ['$timeout', 'crossframe', 'via', '$rootScope', (
+                   $timeout,   crossframe,   via,   $rootScope) ->
     link: (scope, elem, attrs, ctrl) ->
         scope.viaPageLink = ''
 
@@ -14,6 +14,12 @@ module.exports = ['$timeout', 'crossframe', 'via', (
         scope.$watch (-> scope.viaLinkDialog.visible), (visible) ->
             if visible
                 $timeout (-> elem.find('#via').focus().select()), 0, false
+
+        scope.$watch (-> $rootScope.socialview.name), (socialview) ->
+            if socialview != 'All'
+                # Change the text shown on the dialog to reflect that we are now
+                # sharing a group.
+                return true
 
         scope.$watchCollection (-> crossframe.providers), ->
             if crossframe.providers?.length

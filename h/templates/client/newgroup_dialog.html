@@ -44,7 +44,10 @@
 						ng-value="groupLink"></input>
 		       	<div class="form-actions">
 			   		<div class="form-actions-message">
-			   			<p><a href="mailto:?subject=Annotate this&body=http://...">Share via email</a></p>
+			   			<p><a href="//twitter.com/intent/tweet?url={{groupLink}}"><i class="h-icon-twitter"></i> Tweet</a></p>
+				        <p><a href="//www.facebook.com/sharer/sharer.php?u={{groupLink}}"><i class="h-icon-facebook"></i> Post on Facebook</a></p>
+				        <p><a href="//plus.google.com/share?url={{groupLink}}"><i class="h-icon-google-plus"></i> Share on Google Plus</a></p>
+				        <p><a href="mailto:?subject=Let's%20Annotate&amp;body={{groupLink}}"><i class="h-icon-mail"></i> Email</a></p>
 			   		</div>
 			    </div>
 			</div>
