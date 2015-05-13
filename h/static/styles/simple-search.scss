@@ -6,14 +6,14 @@
   position: relative;
   top: -29px;
   left: 20px;
-  max-width: 65%
+  max-width: 50%;
 }
 
 .simple-search-form {
   @include clearfix;
   position: relative;
   padding: 0 1.5385em;
-  color: $gray;
+  color: $gray-darker;
 }
 
 .simple-search-form * {
@@ -27,7 +27,7 @@
 }
 
 :not(:focus) ~ .simple-search-icon {
-  color: $gray-lighter;
+  color: $gray;
 }
 
 input.simple-search-input {
