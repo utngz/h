@@ -82,14 +82,6 @@ AnnotationController = [
     # @name annotation.AnnotationController#isPrivate
     # @returns {boolean} True if the annotation is private to the current user.
     ###
-    this.isGroup = ->
-      permissions.isGroup model.permissions
-
-    ###*
-    # @ngdoc method
-    # @name annotation.AnnotationController#isPrivate
-    # @returns {boolean} True if the annotation is private to the current user.
-    ###
     this.isPrivate = ->
       permissions.isPrivate model.permissions, model.user
 
@@ -210,8 +202,6 @@ AnnotationController = [
       if auth.user?
         if permissions.isPublic model.permissions
           reply.permissions = permissions.public()
-        else if permissions.isGroup model.permissions
-          reply.permissions = permissions.group()
         else
           reply.permissions = permissions.private()
 
