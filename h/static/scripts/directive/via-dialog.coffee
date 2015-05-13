@@ -15,11 +15,11 @@ module.exports = ['$timeout', 'crossframe', 'via', '$rootScope', (
             if visible
                 $timeout (-> elem.find('#via').focus().select()), 0, false
 
-        scope.$watch (-> $rootScope.socialview.name), (socialview) ->
-            if socialview != 'All'
-                # Change the text shown on the dialog to reflect that we are now
-                # sharing a group.
-                return true
+        # scope.$watch (-> $rootScope.socialview.name), (socialview) ->
+        #     if socialview != 'All'
+        #         # Change the text shown on the dialog to reflect that we are now
+        #         # sharing a group.
+        #         return true
 
         scope.$watchCollection (-> crossframe.providers), ->
             if crossframe.providers?.length

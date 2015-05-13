@@ -272,7 +272,7 @@ AnnotationController = [
 
     $scope.filtertags = (tag) ->
       str = "group:"
-      re = new RegExp(str1, "g");
+      re = new RegExp(str, "g");
       !re.test(tag.text)
 
     updateTimestamp = (repeat=false) =>
