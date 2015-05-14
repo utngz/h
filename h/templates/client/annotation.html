@@ -98,10 +98,9 @@
 <!-- / Tags -->
 
 <div class="annotation-section" ng-if="vm.editing">
-  <!-- Add logic here for this and break it out into a sparate PR. -->
-  <p ng-show=""><i class="h-icon-lock"></i> This annotation is viewable only to you. <a href="" ng-click="">Want to change this?</a></p>
+  <p ng-show="$rootScope.level.text == 'Private'"><i class="h-icon-lock"></i> This annotation is viewable only to you. <a href="" ng-click="">Want to change this?</a></p>
   <p ng-show="$rootScope.level.text != ('Public' || 'Only me')"><i class="h-icon-group"></i> This annotation is viewable only to people who follow the link to the group. <a href="" ng-click="">Want to change this?</a></p>
-  <p ng-show="$rootScope.level.text=='Public'"><i class="h-icon-public"></i> This annotation is viewable only to you. <a href="" ng-click="">Want to change this?</a></p>
+  <p ng-show="$rootScope.level.text == 'Public'"><i class="h-icon-public"></i> This annotation is viewable only to you. <a href="" ng-click="">Want to change this?</a></p>
 </div>
 
 <div class="annotation-section form-actions"
