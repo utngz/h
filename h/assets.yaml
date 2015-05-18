@@ -109,6 +109,7 @@ config:
       depends:
         - h:static/scripts/config/*
 
+
 # Application
 app:
   contents:
