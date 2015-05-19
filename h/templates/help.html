@@ -5,6 +5,8 @@
   <!-- Override app body stylings for just this page -->
   <style type="text/css">
     body {background: #FFF !important;}
+    ol li {margin-top: .5em !important;}
+    ol {margin-top: 1em !important;}
   </style>
   {{ super() }}
   {% if is_onboarding %}
@@ -22,9 +24,9 @@
 
 {% block content %}
   <div class="help-page">
-    <div class="help-page-content masthead-small">
+<!--     <div class="help-page-content masthead-small">
       {% include "includes/header.html" %}
-    </div>
+    </div> -->
     <article class="help-page-content">
       {% if is_help %}
         <section class="help-page-section">
@@ -49,15 +51,22 @@
       {% endif %}
       {% if is_index %}
         <section class="help-page-section">
-          <h2 id="getting-started" class="help-page-heading">Getting started</h2>
-          <p class="help-page-lede">Great, you've got the server up and running, you're now ready to start kicking the tires.</p>
-          <div class="numbered-list grid">
-            <div class="column-desktop-1-2"><div class="numbered-list-item">Create an account using the sidebar on the right of the screen.</div></div>
-            <div class="column-desktop-1-2"><div class="numbered-list-item">Annotate this page or use this bookmarklet: {% include "includes/bookmarklet.html" %}</div></div>
-          </div>
+          <h2 id="getting-started" class="help-page-heading">Welcome to the Groups Prototype!</h2>
+          <p>For the sake of this demo let's pretend that you clicked on a hypothes.is link and have been taken to this page.</p>
+          <p>You are now seeeing and making annotations under the <strong>IntrepidArmadillo</strong> group.</p>
+          <p>There are a couple of tasks we will cover and if you experience difficulties or confussion with any of them please email JakeHartnell@hypothes.is.</p>
+          <p>Please complete the following:</p>
+          <ol>
+            <li>Create an account. You can get your confirmation email <a href="">here</a>, as this is a prototype this is not a real hypothes.is account no real confirmation email will be sent.</li>
+            <li>Make an annotation under the IntrepidArmadillo group (select some text and choose the <i class="feature-icon h-icon-insert-comment"></i>) icon.</li>
+            <li>Make a private annotation that is visible only to you.</li>
+            <li>Share the link to group.</li>
+            <li>Reply to annotation that is <em>not</em> in the group.</li>
+            <li>Create a new group! Give it whatever name you choose.</li>
+          </ol>
         </section>
       {% endif %}
-      <section class="help-page-section">
+<!--       <section class="help-page-section">
         <h2 id="key-features" class="help-page-heading">Annotation Types</h2>
         <p class="help-page-lede">There are a few types of annotations that can be created
           with the application:</p>
@@ -163,4 +172,4 @@
       <div id="help-2"></div>
     </div>
   </div>
-{% endblock %}
+{% endblock %} -->
