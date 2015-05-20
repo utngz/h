@@ -4,18 +4,27 @@
        title="Close"
        ng-click="viaLinkDialog.visible = false"></i>
     <div class="form-vertical tabbable">
-	    <div class="form tab-pane" data-title="Share this view">
-	  		<input id="via" 
-	        	   class="form-input" 
-	       	   	   type="text"
-	       	   	   ng-value="viaPageLink" 
-	        	   name="search"></input>
-	        <p style="margin-top: 1em;" ng-hide="shareGroup">To share this page, copy the link above or click on one of the options below. Anyone who clicks on the shared link will be taken to the page with hypothes.is loaded.</p>
-	        <p style="margin-top: 1em;" ng-show="shareGroup">To share the annotation group on this page, copy the link above or click on one of the options below. Anyone who clicks on the link will be taken to the page as part of the current group.</p>
-	        <p><a href="//twitter.com/intent/tweet?url={{viaPageLink}}"><i class="h-icon-twitter"></i> Tweet</a></p>
-	        <p><a href="//www.facebook.com/sharer/sharer.php?u={{viaPageLink}}"><i class="h-icon-facebook"></i> Post on Facebook</a></p>
-	        <p><a href="//plus.google.com/share?url={{viaPageLink}}"><i class="h-icon-google-plus"></i> Share on Google Plus</a></p>
-	        <p><a href="mailto:?subject=Let's%20Annotate&amp;body={{viaPageLink}}"><i class="h-icon-mail"></i> Email</a></p>
+	    <div class="form tab-pane" data-title="Share this page">
+			<p style="margin-top: 1em;" ng-hide="shareGroup">Share the link below to show anyone these annotations and invite them to contribute their own.</p>
+	        <p style="margin-top: 1em;" ng-show="shareGroup">Share the link below the to show anyone this group's annotations and invite them to contribute their own.</p>
+			<p><input id="via" class="form-input" type="text" ng-value="viaPageLink" readonly></input></p>
+			<p class="share-links">
+				<a href="//twitter.com/intent/tweet?url={{viaPageLink}}"
+				   target="_blank"
+				   title="Tweet link"
+				   class="h-icon-twitter"></a>
+				<a href="//www.facebook.com/sharer/sharer.php?u={{viaPageLink}}"
+				   target="_blank"
+				   title="Share on Facebook"
+				   class="h-icon-facebook"></a>
+				<a href="//plus.google.com/share?url={{viaPageLink}}"
+				   target="_blank"
+				   title="Post on Google Plus"
+				   class="h-icon-google-plus"></a>
+				<a href="mailto:?subject=Let's%20Annotate&amp;body={{viaPageLink}}"
+				   title="Share via email"
+				   class="h-icon-mail"></a>
+			</p>
 		</div>
 	</div>
 </div>

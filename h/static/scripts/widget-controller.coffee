@@ -99,7 +99,7 @@ module.exports = class WidgetController
     
     $rootScope.views = [
         {name:'All', icon:'h-icon-public', selected:true}
-        {name:'IntrepidArmadillo', icon:'h-icon-group', selected:false}
+        {name:'IntrepidBird', icon:'h-icon-group', selected:false}
     ]
 
     $rootScope.viewnames = ['All']

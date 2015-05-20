@@ -1,25 +1,30 @@
-module.exports = ['localStorage', 'permissions', '$rootScope', (localStorage, permissions, $rootScope) ->
-  VISIBILITY_KEY ='hypothesis.visibility'
-  VISIBILITY_PUBLIC = 'public'
-  VISIBILITY_PRIVATE = 'private'
-  VISIBILITY_GROUP = $rootScope.socialview.name
-  viewnamelist = ['All']
+PrivacyController = [ '$scope', '$rootScope', ($scope, $rootScope) ->
 
-  $rootScope.levels = [
-    {name: VISIBILITY_PUBLIC, text: 'Public', icon:'h-icon-public'}
-    {name: VISIBILITY_PRIVATE, text: 'Only Me', icon:'h-icon-lock'}
+  $scope.VISIBILITY_KEY ='hypothesis.visibility'
+  $scope.VISIBILITY_PUBLIC = 'public'
+  $scope.VISIBILITY_PRIVATE = 'private'
+  $scope.VISIBILITY_GROUP = $rootScope.socialview.name
+  $scope.viewnamelist = ['All']
+
+  $scope.levels = [
+    {name: $scope.VISIBILITY_PUBLIC, text: 'Public', icon:'h-icon-public'}
+    {name: $scope.VISIBILITY_PRIVATE, text: 'Only Me', icon:'h-icon-lock'}
   ]
 
-  getLevel = (name) ->
-    for level in $rootScope.levels
+  $scope.getLevel = (name) ->
+    for level in $scope.levels
       if level.name == name
         return level
     undefined
 
-  isPublic  = (level) -> level == VISIBILITY_PUBLIC
+  $scope.isPublic  = (level) -> level == $scope.VISIBILITY_PUBLIC
 
-  isGroup  = (level) -> 
-    level != ( VISIBILITY_PRIVATE or VISIBILITY_PUBLIC )
+  $scope.isGroup  = (level) -> 
+    level != ( $scope.VISIBILITY_PRIVATE or $scope.VISIBILITY_PUBLIC )
+
+]
+
+module.exports = ['localStorage', 'permissions', '$rootScope', (localStorage, permissions, $rootScope) ->
 
   link: (scope, elem, attrs, controller) ->
     return unless controller?
@@ -28,18 +33,18 @@ module.exports = ['localStorage', 'permissions', '$rootScope', (localStorage, pe
       return unless selectedPermissions?
 
       if permissions.isPublic(selectedPermissions)
-        getLevel(VISIBILITY_PUBLIC)
+        scope.getLevel(scope.VISIBILITY_PUBLIC)
       # else if permissions.isGroup(selectedPermissions)
-      #   getLevel(VISIBILITY_GROUP)
+      #   scope.getLevel(scope.VISIBILITY_GROUP)
       else
-        getLevel(VISIBILITY_PRIVATE)
+        scope.getLevel(scope.VISIBILITY_PRIVATE)
 
     controller.$parsers.push (privacy) ->
       return unless privacy?
 
-      if isPublic(privacy.name)
+      if scope.isPublic(privacy.name)
         newPermissions = permissions.public()
-      else if isGroup(privacy.name)
+      else if scope.isGroup(privacy.name)
         newPermissions = permissions.public()
       else
         newPermissions = permissions.private()
@@ -54,31 +59,30 @@ module.exports = ['localStorage', 'permissions', '$rootScope', (localStorage, pe
     controller.$render = ->
       unless controller.$modelValue.read?.length
         if $rootScope.socialview.name == 'All'
-          name = localStorage.getItem VISIBILITY_KEY
-          name ?= VISIBILITY_PUBLIC
+          name = localStorage.getItem scope.VISIBILITY_KEY
+          name ?= scope.VISIBILITY_PUBLIC
         else
-          name = VISIBILITY_GROUP
-        level = getLevel(name)
+          name = scope.VISIBILITY_GROUP
+        level = scope.getLevel(name)
         controller.$setViewValue level
 
       $rootScope.level = controller.$viewValue
       console.log $rootScope.level
       scope.level = controller.$viewValue
 
-    scope.levels = $rootScope.levels
     scope.setLevel = (level) ->
-      localStorage.setItem VISIBILITY_KEY, level.name
+      localStorage.setItem scope.VISIBILITY_KEY, level.name
       controller.$setViewValue level
       controller.$render()
-    scope.isPublic = isPublic
-    scope.isGroup = isGroup
+
 
     for view in $rootScope.views
-      if view.name not in viewnamelist
-        viewnamelist.push view.name
-        $rootScope.levels.push {name: VISIBILITY_GROUP, text: view.name, icon:'h-icon-group'}
+      if view.name not in scope.viewnamelist
+        scope.viewnamelist.push view.name
+        scope.levels.push {name: scope.VISIBILITY_GROUP, text: view.name, icon:'h-icon-group'}
 
   require: '?ngModel'
+  controller: PrivacyController
   restrict: 'E'
   scope: {}
   templateUrl: 'privacy.html'

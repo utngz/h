@@ -97,10 +97,10 @@
 </div>
 <!-- / Tags -->
 
-<div class="annotation-section" ng-if="vm.editing">
-  <p ng-show="$rootScope.level.text == 'Private'"><i class="h-icon-lock"></i> This annotation is viewable only to you. <a href="" ng-click="">Want to change this?</a></p>
-  <p ng-show="$rootScope.level.text != ('Public' || 'Only me')"><i class="h-icon-group"></i> This annotation is viewable only to people who follow the link to the group. <a href="" ng-click="">Want to change this?</a></p>
-  <p ng-show="$rootScope.level.text == 'Public'"><i class="h-icon-public"></i> This annotation is viewable only to you. <a href="" ng-click="">Want to change this?</a></p>
+<div class="annotation-section small" ng-if="vm.editing">
+  <p ng-show="level.text == 'Only Me'"><i class="h-icon-lock"></i> This annotation is viewable only to you. <a href="" ng-click="">Want to change this?</a></p>
+  <p ng-show="level.text != ('Public' || 'Only me')"><i class="h-icon-group"></i> This annotation is viewable only to people who follow the link to the group. <a href="" ng-click="">Want to change this?</a></p>
+  <p ng-show="level.text == 'Public'"><i class="h-icon-public"></i> This annotation is viewable only to you. <a href="" ng-click="">Want to change this?</a></p>
 </div>
 
 <div class="annotation-section form-actions"
@@ -125,7 +125,8 @@
 <div class="annotation-section annotation-license" ng-if="vm.editing">
   <a href="http://creativecommons.org/publicdomain/zero/1.0/"
      title="View more information about the Creative Commons Public Domain license"
-     target="_blank">
+     target="_blank"
+     class="small">
     <i class="h-icon-cc-logo"></i><i class="h-icon-cc-zero"></i>
     Annotations can be freely reused by anyone for any purpose.
   </a>

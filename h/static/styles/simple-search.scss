@@ -3,9 +3,7 @@
 
 .simple-search {
   overflow: hidden;
-  position: relative;
-  top: -29px;
-  left: 20px;
+  float: left;
   max-width: 50%;
 }
 
@@ -27,7 +25,7 @@
 }
 
 :not(:focus) ~ .simple-search-icon {
-  color: $gray;
+  color: $gray-light;
 }
 
 input.simple-search-input {
