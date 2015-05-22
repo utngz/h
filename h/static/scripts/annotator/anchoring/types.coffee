@@ -1,12 +1,8 @@
-# XXX: for globals needed by DomTextMatcher
-require('diff-match-patch')
-require('text-match-engines')
-DomTextMatcher = require('dom-text-matcher')
-
 Annotator = require('annotator')
 $ = Annotator.$
 xpathRange = Annotator.Range
 
+DiffMatchPatch = require('diff-match-patch')
 seek = require('dom-seek')
 
 
@@ -216,31 +212,36 @@ class TextQuoteAnchor extends Anchor
 
   toRange: (options = {}) ->
     root = options.root or document.body
-    corpus = root.textContent
-    matcher = new DomTextMatcher(-> corpus)
+    dmp = new DiffMatchPatch()
+    dmp.Match_Distance = 10000
 
-    options.matchDistance ?= corpus.length * 2
-    options.contextMatchDistance ?= corpus.length * 2
-    options.contextMatchThreshold ?= 0.5
-    options.patternMatchThreshold ?= 0.5
-    options.flexContext ?= true
-    options.withFuzzyComparison ?= true
+    slices = @quote.match(/(.|[\r\n]){1,32}/g)
 
-    if @prefix.length and @suffix.length
-      result = matcher.searchFuzzyWithContext(
-        @prefix, @suffix, @quote, @start, @end, true, options)
+    loc = @start ? root.textContent.length / 2
 
-    if not result?.matches.length and @quote.length >= 32
-      # For short quotes, this is bound to return false positives.
-      # See https://github.com/hypothesis/h/issues/853 for details.
-      result = matcher.searchFuzzy(@quote, @start, true, options)
+    if @prefix?
+      prefixStart = Math.max(0, loc - @prefix.length)
+      prefixStart = dmp.match_main(root.textContent, @prefix, prefixStart)
+      if prefixStart isnt -1
+        loc = prefixStart + @prefix.length
 
-    if result?.matches.length
-      match = result.matches[0]
-      positionAnchor = new TextPositionAnchor(match.start, match.end)
-      return positionAnchor.toRange()
+    foldSlices = (acc, slice) ->
+      result = dmp.match_main(root.textContent, slice, acc.loc)
+      if result is -1
+        throw new Error('no match found')
+      else if Math.abs(result - acc.loc) > dmp.Match_Distance
+        throw new Error('no match found')
+      acc.loc = result + slice.length
+      acc.start = Math.min(acc.start, result)
+      acc.end = Math.max(acc.end, result + slice.length)
+      return acc
 
-    throw new Error('no match found')
+    start = Number.MAX_VALUE
+    end = 0
+
+    {start, end} = slices.reduce(foldSlices, {start, end, loc})
+
+    return new TextPositionAnchor(start, end).toRange(options)
 
   toSelector: ->
     selector = {
